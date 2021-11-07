@@ -33,10 +33,6 @@ import {
     GRBL_ACTIVE_STATE_RUN,
     // Marlin
     MARLIN,
-    // Smoothie
-    SMOOTHIE,
-    // TinyG
-    TINYG,
     // Workflow
     WORKFLOW_STATE_RUNNING,
     WORKFLOW_STATE_IDLE,

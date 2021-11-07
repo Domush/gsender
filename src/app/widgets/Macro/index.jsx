@@ -28,10 +28,6 @@ import {
     GRBL_ACTIVE_STATE_RUN,
     // Marlin
     MARLIN,
-    // Smoothie
-    SMOOTHIE,
-    // TinyG
-    TINYG,
     // Workflow
     WORKFLOW_STATE_RUNNING
 } from '../../constants';
@@ -346,7 +342,7 @@ class MacroWidget extends PureComponent {
         if (workflow.state === WORKFLOW_STATE_RUNNING) {
             return false;
         }
-        if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], type)) {
+        if (!includes([GRBL, MARLIN], type)) {
             return false;
         }
         if (type === GRBL) {
@@ -361,28 +357,6 @@ class MacroWidget extends PureComponent {
         }
         if (type === MARLIN) {
             // Marlin does not have machine state
-        }
-        if (type === SMOOTHIE) {
-            const activeState = get(controllerState, 'status.activeState');
-            const states = [
-                SMOOTHIE_ACTIVE_STATE_IDLE,
-                SMOOTHIE_ACTIVE_STATE_RUN
-            ];
-            if (!includes(states, activeState)) {
-                return false;
-            }
-        }
-        if (type === TINYG) {
-            const machineState = get(controllerState, 'sr.machineState');
-            const states = [
-                TINYG_MACHINE_STATE_READY,
-                TINYG_MACHINE_STATE_STOP,
-                TINYG_MACHINE_STATE_END,
-                TINYG_MACHINE_STATE_RUN
-            ];
-            if (!includes(states, machineState)) {
-                return false;
-            }
         }
 
         return true;

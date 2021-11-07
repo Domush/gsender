@@ -34,10 +34,6 @@ import {
     GRBL_ACTIVE_STATE_RUN,
     // Marlin
     MARLIN,
-    // Smoothie
-    SMOOTHIE,
-    // TinyG
-    TINYG,
     // Workflow
     WORKFLOW_STATE_RUNNING,
     WORKFLOW_STATE_PAUSED,
@@ -961,7 +957,7 @@ class VisualizerWidget extends PureComponent {
         if (!objects.cuttingTool.visible) {
             return false;
         }
-        if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], controllerType)) {
+        if (!includes([GRBL, MARLIN], controllerType)) {
             return false;
         }
         if (controllerType === GRBL) {

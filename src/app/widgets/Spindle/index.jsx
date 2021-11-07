@@ -16,18 +16,10 @@ import {
     GRBL,
     GRBL_ACTIVE_STATE_HOLD,
     GRBL_ACTIVE_STATE_IDLE,
-    LASER_MODE,
     MARLIN,
-    SMOOTHIE,
-    SMOOTHIE_ACTIVE_STATE_IDLE,
-    SMOOTHIE_ACTIVE_STATE_HOLD,
 
+    LASER_MODE,
     SPINDLE_MODE,
-    TINYG,
-    TINYG_MACHINE_STATE_READY,
-    TINYG_MACHINE_STATE_STOP,
-    TINYG_MACHINE_STATE_END,
-    TINYG_MACHINE_STATE_HOLD,
 
     WORKFLOW_STATE_RUNNING
 } from '../../constants';
@@ -254,7 +246,7 @@ class SpindleWidget extends PureComponent {
         if (workflow.state === WORKFLOW_STATE_RUNNING) {
             return false;
         }
-        if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], type)) {
+        if (!includes([GRBL, MARLIN], type)) {
             return false;
         }
 
@@ -270,28 +262,6 @@ class SpindleWidget extends PureComponent {
         }
         if (type === MARLIN) {
             // Marlin does not have machine state
-        }
-        if (type === SMOOTHIE) {
-            const activeState = get(state, 'status.activeState');
-            const states = [
-                SMOOTHIE_ACTIVE_STATE_IDLE,
-                SMOOTHIE_ACTIVE_STATE_HOLD
-            ];
-            if (!includes(states, activeState)) {
-                return false;
-            }
-        }
-        if (type === TINYG) {
-            const machineState = get(state, 'sr.machineState');
-            const states = [
-                TINYG_MACHINE_STATE_READY,
-                TINYG_MACHINE_STATE_STOP,
-                TINYG_MACHINE_STATE_END,
-                TINYG_MACHINE_STATE_HOLD
-            ];
-            if (!includes(states, machineState)) {
-                return false;
-            }
         }
 
         return true;

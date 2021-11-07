@@ -28,17 +28,5 @@
             "alarm": "",
             "check": ""
         }
-    },
-    "Smoothie": {
-        "activeState": {
-            "idle": "",
-            "run": "",
-            "hold": "",
-            "door": "",
-            "home": "",
-            "sleep": "",
-            "alarm": "",
-            "check": ""
-        }
     }
 }

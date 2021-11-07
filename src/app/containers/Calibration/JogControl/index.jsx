@@ -24,10 +24,6 @@ import {
     GRBL,
     // Marlin
     MARLIN,
-    // Smoothie
-    SMOOTHIE,
-    // TinyG
-    TINYG,
     // Workflow
     GRBL_ACTIVE_STATE_JOG,
     GRBL_ACTIVE_STATE_IDLE, WORKFLOW_STATE_IDLE
@@ -708,7 +704,7 @@ class AxesWidget extends PureComponent {
         if (workflow.state !== WORKFLOW_STATE_IDLE && !isContinuousJogging) {
             return false;
         }
-        if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], type)) {
+        if (!includes([GRBL, MARLIN], type)) {
             return false;
         }
 
