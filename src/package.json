@@ -1,16 +1,17 @@
 {
-  "name": "gSender",
-  "version": "1.0.0",
-  "productName": "gSender",
-  "description": "CNC Milling Controller",
+  "name": "CNCjs for Marlin - w/ gSender UI",
+  "version": "0.0.1",
+  "productName": "CNCjs_for_Marlin",
+  "description": "Web-based gCode sender",
+  "homepage": "https://github.com/cncjs/cncjs",
   "author": {
-    "name": "Sienci Labs <hi@sienci.com>",
-    "email": "hi@sienci.com"
+    "name": "Edward W <CNCjs@webbsense.com>",
+    "email": "CNCjs@webbsense.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sienci-Labs/gsender"
+    "url": "https://github.com/Domush/gsender"
   },
   "main": "main.js",
   "dependencies": {

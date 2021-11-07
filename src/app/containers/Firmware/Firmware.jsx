@@ -1,25 +1,3 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 /* eslint-disable no-return-assign */
 /* eslint-disable no-new-wrappers */
@@ -448,7 +426,7 @@ class Firmware extends PureComponent {
         } else if (name === 'LongMill') {
             message = `Are you sure you want to restore your ${name} ${type} back to its default state??`;
         } else {
-            message = `We dont have the default settings for your ${name} ${type}. Would you 
+            message = `We dont have the default settings for your ${name} ${type}. Would you
             like to Restore your machine to the Grbl defaults?`;
         }
         return message;

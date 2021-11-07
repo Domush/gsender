@@ -1,25 +1,3 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 module.exports = [
     { type: 'header', text: 'Wait until the planner queue is empty' },
@@ -52,4 +30,11 @@ module.exports = [
     '[posa]',
     { type: 'header', text: 'Set bounding box' },
     '%xmin=0,xmax=100,ymin=0,ymax=100,zmin=0,zmax=50\n',
+    { type: 'header', text: 'Bounding box' },
+    '[xmin]',
+    '[xmax]',
+    '[ymin]',
+    '[ymax]',
+    '[zmin]',
+    '[zmax]'
 ];

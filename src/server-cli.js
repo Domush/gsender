@@ -1,25 +1,3 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 /* eslint max-len: 0 */
 /* eslint no-console: 0 */
@@ -63,7 +41,7 @@ const parseMountPoint = (val, acc) => {
 const parseController = (val) => {
     val = val ? (val + '').toLowerCase() : '';
 
-    if (['grbl', 'marlin', 'smoothie', 'tinyg', 'g2core'].includes(val)) {
+    if (['grbl', 'marlin', 'g2core'].includes(val)) {
         return val;
     } else {
         return '';
@@ -86,6 +64,21 @@ program
     .option('--access-token-lifetime <lifetime>', 'Access token lifetime in seconds or a time span string (default: 30d)')
     .option('--allow-remote-access', 'Allow remote access to the server (default: false)')
     .option('--controller <type>', 'Specify CNC controller: Grbl|Marlin|Smoothie|TinyG|g2core (default: \'\')', parseController, '');
+
+program.on('--help', () => {
+    console.log('');
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ cncjs -vv');
+    console.log('    $ cncjs --mount /pendant:/home/pi/tinyweb');
+    console.log('    $ cncjs --mount /widget:~+/widget --mount /pendant:~/pendant');
+    console.log('    $ cncjs --mount /widget:https://cncjs.github.io/cncjs-widget-boilerplate/v1/');
+    console.log('    $ cncjs --watch-directory /home/pi/watch');
+    console.log('    $ cncjs --access-token-lifetime 60d  # e.g. 3600, 30m, 12h, 30d');
+    console.log('    $ cncjs --allow-remote-access');
+    console.log('    $ cncjs --controller Grbl');
+    console.log('');
+});
 
 // Commander assumes that the first two values in argv are 'node' and appname, and then followed by the args.
 // This is not the case when running from a packaged Electron app. Here you have the first value appname and then args.

@@ -1,32 +1,10 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 import path from 'path';
 import pkg from '../../package.json';
 import { languages } from '../../../build.config';
 
-const RC_FILE = '.sender_rc';
-const SESSION_PATH = '.sienci-sessions';
+const RC_FILE = '.cnc_rc';
+const SESSION_PATH = '.cncjs-sessions';
 
 // Secret
 const secret = pkg.version;
@@ -96,7 +74,7 @@ export default {
         // https://github.com/andrewrk/node-multiparty/
         'multiparty': {
             // Limits the amount of memory a field (not a file) can allocate in bytes. If this value is exceeded, an error event is emitted. The default size is 2MB.
-            maxFieldsSize: 50 * 1024 * 1024, // 20MB
+            maxFieldsSize: 50 * 1024 * 1024, // 50MB
 
             // Limits the number of fields that will be parsed before emitting an error event. A file counts as a field in this case. Defaults to 1000.
             maxFields: 1000

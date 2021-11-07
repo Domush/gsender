@@ -1,15 +1,18 @@
 import ensureArray from 'ensure-array';
 import * as parser from 'gcode-parser';
+import Toolpath from 'gcode-toolpath';
 import _ from 'lodash';
+import map from 'lodash/map';
 import SerialConnection from '../../lib/SerialConnection';
 import EventTrigger from '../../lib/EventTrigger';
 import Feeder from '../../lib/Feeder';
-import Sender, { SP_TYPE_SEND_RESPONSE } from '../../lib/Sender';
+import Sender, { SP_TYPE_CHAR_COUNTING } from '../../lib/Sender';
 import Workflow, {
     WORKFLOW_STATE_IDLE,
     WORKFLOW_STATE_PAUSED,
     WORKFLOW_STATE_RUNNING
 } from '../../lib/Workflow';
+import delay from '../../lib/delay';
 import ensurePositiveNumber from '../../lib/ensure-positive-number';
 import evaluateAssignmentExpression from '../../lib/evaluate-assignment-expression';
 import logger from '../../lib/logger';
@@ -17,6 +20,7 @@ import translateExpression from '../../lib/translate-expression';
 import config from '../../services/configstore';
 import monitor from '../../services/monitor';
 import taskRunner from '../../services/taskrunner';
+import { getOutlineGcode } from '../../lib/outlineService';
 import store from '../../store';
 import {
     GLOBAL_OBJECTS as globalObjects,
@@ -30,8 +34,9 @@ import interpret from './interpret';
 import {
     MARLIN,
     QUERY_TYPE_POSITION,
-    QUERY_TYPE_TEMPERATURE
 } from './constants';
+import { METRIC_UNITS } from '../../../app/constants';
+import { determineMachineZeroFlagSet, determineMaxMovement, getAxisMaximumLocation } from '../../lib/homing';
 
 // % commands
 const WAIT = '%wait';
@@ -83,6 +88,8 @@ class MarlinController {
     controller = null;
 
     ready = false;
+
+    initialized = false;
 
     state = {};
 
@@ -141,11 +148,6 @@ class MarlinController {
                     source: WRITE_SOURCE_SERVER
                 });
                 this.query.lastQueryTime = now;
-            } else if (this.query.type === QUERY_TYPE_TEMPERATURE) {
-                this.connection.write('M105\n', {
-                    source: WRITE_SOURCE_SERVER
-                });
-                this.query.lastQueryTime = now;
             } else {
                 log.error('Unsupported query type:', this.query.type);
             }
@@ -154,7 +156,7 @@ class MarlinController {
         }
     };
 
-    // Get the current position of the active nozzle and stepper values.
+    // Get the current position of the steppers.
     queryPosition = (() => {
         let lastQueryTime = 0;
 
@@ -180,34 +182,6 @@ class MarlinController {
                 }
             }
         }, 500);
-    })();
-
-    // Request a temperature report to be sent to the host at some point in the future.
-    queryTemperature = (() => {
-        let lastQueryTime = 0;
-
-        return _.throttle(() => {
-            // Check the ready flag
-            if (!(this.ready)) {
-                return;
-            }
-
-            const now = new Date().getTime();
-
-            if (!this.query.type) {
-                this.query.type = QUERY_TYPE_TEMPERATURE;
-                lastQueryTime = now;
-            } else if (lastQueryTime > 0) {
-                const timespan = Math.abs(now - lastQueryTime);
-                const toleranceTime = 10000; // 10 seconds
-
-                if (timespan >= toleranceTime) {
-                    log.silly(`Reschedule temperture report query: now=${now}ms, timespan=${timespan}ms`);
-                    this.query.type = QUERY_TYPE_TEMPERATURE;
-                    lastQueryTime = now;
-                }
-            }
-        }, 1000);
     })();
 
     constructor(engine, options) {
@@ -370,26 +344,21 @@ class MarlinController {
                 const data = parser.parseLine(line, { flatten: true });
                 const words = ensureArray(data.words);
 
-                // M109 Set extruder temperature and wait for the target temperature to be reached
-                if (_.includes(words, 'M109')) {
-                    log.debug(`Wait for extruder temperature to reach target temperature (${line})`);
-                    this.feeder.hold({ data: 'M109' }); // Hold reason
-                }
-
-                // M190 Set heated bed temperature and wait for the target temperature to be reached
-                if (_.includes(words, 'M190')) {
-                    log.debug(`Wait for heated bed temperature to reach target temperature (${line})`);
-                    this.feeder.hold({ data: 'M190' }); // Hold reason
-                }
-
                 { // Program Mode: M0, M1
                     const programMode = _.intersection(words, ['M0', 'M1'])[0];
                     if (programMode === 'M0') {
-                        log.debug('M0 Program Pause');
-                        this.feeder.hold({ data: 'M0' }); // Hold reason
+                        log.debug(`M0 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
+                        // Workaround for Carbide files - prevent M0 early from pausing program
+                        if (sent > 10) {
+                            this.workflow.pause({ data: 'M0' });
+                            this.emit('workflow:pause', { data: 'M0' });
+                        }
+                        return line.replace('M0', '(M0)');
                     } else if (programMode === 'M1') {
-                        log.debug('M1 Program Pause');
-                        this.feeder.hold({ data: 'M1' }); // Hold reason
+                        log.debug(`M1 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
+                        this.workflow.pause({ data: 'M1' });
+                        this.emit('workflow:pause', { data: 'M1' });
+                        return line.replace('M1', '(M1)');
                     }
                 }
 
@@ -399,6 +368,11 @@ class MarlinController {
                     this.feeder.hold({ data: 'M6' }); // Hold reason
                 }
 
+                // More aggressive updating of spindle modals for safety
+                const spindleCommand = _.intersection(words, ['M3', 'M4'])[0];
+                if (spindleCommand) {
+                    this.updateSpindleModal(spindleCommand);
+                }
                 return line;
             }
         });
@@ -410,6 +384,7 @@ class MarlinController {
 
             if (this.runner.isAlarm()) {
                 this.feeder.reset();
+                this.emit('workflow:state', this.workflow.state); // Propogate alarm code to UI
                 log.warn('Stopped sending G-code commands in Alarm mode');
                 return;
             }
@@ -433,7 +408,9 @@ class MarlinController {
         this.feeder.on('unhold', noop);
 
         // Sender
-        this.sender = new Sender(SP_TYPE_SEND_RESPONSE, {
+        this.sender = new Sender(SP_TYPE_CHAR_COUNTING, {
+//            // Deduct the buffer size to prevent from buffer overrun
+//            bufferSize: (128 - 8), // The default buffer size is 128 bytes
             dataFilter: (line, context) => {
                 // Remove comments that start with a semicolon `;`
                 line = line.replace(/\s*;.*/g, '').trim();
@@ -464,28 +441,21 @@ class MarlinController {
                 const data = parser.parseLine(line, { flatten: true });
                 const words = ensureArray(data.words);
 
-                // M109 Set extruder temperature and wait for the target temperature to be reached
-                if (_.includes(words, 'M109')) {
-                    log.debug(`Wait for extruder temperature to reach target temperature (${line}): line=${sent + 1}, sent=${sent}, received=${received}`);
-                    const reason = { data: 'M109' };
-                    this.sender.hold(reason); // Hold reason
-                }
-
-                // M190 Set heated bed temperature and wait for the target temperature to be reached
-                if (_.includes(words, 'M190')) {
-                    log.debug(`Wait for heated bed temperature to reach target temperature (${line}): line=${sent + 1}, sent=${sent}, received=${received}`);
-                    const reason = { data: 'M190' };
-                    this.sender.hold(reason); // Hold reason
-                }
-
                 { // Program Mode: M0, M1
                     const programMode = _.intersection(words, ['M0', 'M1'])[0];
                     if (programMode === 'M0') {
                         log.debug(`M0 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
-                        this.workflow.pause({ data: 'M0' });
+                        // Workaround for Carbide files - prevent M0 early from pausing program
+                        if (sent > 10) {
+                            this.workflow.pause({ data: 'M0' });
+                            this.emit('workflow:pause', { data: 'M0' });
+                        }
+                        return line.replace('M0', '(M0)');
                     } else if (programMode === 'M1') {
                         log.debug(`M1 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
                         this.workflow.pause({ data: 'M1' });
+                        this.emit('workflow:pause', { data: 'M1' });
+                        return line.replace('M1', '(M1)');
                     }
                 }
 
@@ -514,6 +484,8 @@ class MarlinController {
                 log.warn(`Expected non-empty line: N=${this.sender.state.sent}`);
                 return;
             }
+
+            this.emit('serialport:read', line);
 
             this.connection.write(line + '\n', {
                 source: WRITE_SOURCE_SENDER
@@ -636,6 +608,7 @@ class MarlinController {
             const { hold, sent, received } = this.sender.state;
 
             if (this.workflow.state === WORKFLOW_STATE_RUNNING) {
+                this.emit('serialport:read', res.raw);
                 if (hold && (received + 1 >= sent)) {
                     log.debug(`Continue sending G-code: hold=${hold}, sent=${sent}, received=${received + 1}`);
                     this.sender.unhold();
@@ -646,6 +619,7 @@ class MarlinController {
             }
 
             if ((this.workflow.state === WORKFLOW_STATE_PAUSED) && (received < sent)) {
+                this.emit('serialport:read', res.raw);
                 if (!hold) {
                     log.error('The sender does not hold off during the paused state');
                 }
@@ -739,9 +713,6 @@ class MarlinController {
             // M114: Get Current Position
             this.queryPosition();
 
-            // M105: Report Temperatures
-            this.queryTemperature();
-
             { // The following criteria must be met to issue a query
                 const notBusy = !(this.history.writeSource);
                 const senderIdle = (this.sender.state.sent === this.sender.state.received);
@@ -772,6 +743,8 @@ class MarlinController {
                 }
             }
         }, 250);
+
+        // Load file if it exists in CNC engine (AKA it was loaded before connection
     }
 
     populateContext(context) {
@@ -951,6 +924,9 @@ class MarlinController {
         // Stop status query
         this.ready = false;
 
+        // Clear initialized flag
+        this.initialized = false;
+
         this.emit('serialport:close', {
             port: port,
             inuse: false
@@ -979,6 +955,11 @@ class MarlinController {
 
     isClose() {
         return !(this.isOpen());
+    }
+
+    loadFile(gcode, { name }) {
+        log.debug(`Loading file '${name}' to controller`);
+        this.command('gcode:load', name, gcode);
     }
 
     addConnection(socket) {
@@ -1023,6 +1004,7 @@ class MarlinController {
             if (gcode) {
                 socket.emit('gcode:load', name, gcode, context);
             }
+            log.info('Emitting Sender');
         }
         if (this.workflow) {
             // workflow state
@@ -1050,6 +1032,24 @@ class MarlinController {
 
     command(cmd, ...args) {
         const handler = {
+            'flash:start': () => {
+                // unsupported
+            },
+            'flashing:success': () => {
+                // unsupported
+            },
+            'flashing:failed': () => {
+                // unsupported
+            },
+            'firmware:recievedProfiles': () => {
+                // unsupported
+            },
+            'firmware:applyProfileSettings': () => {
+                // unsupported
+            },
+            'firmware:grabMachineProfile': () => {
+                // unsupported
+            },
             'gcode:load': () => {
                 let [name, gcode, context = {}, callback = noop] = args;
                 if (typeof context === 'function') {
@@ -1068,8 +1068,8 @@ class MarlinController {
                     return;
                 }
 
-                this.emit('gcode:load', name, gcode, context);
-                this.event.trigger('gcode:load');
+                //this.emit('gcode:load', name, gcode, context);
+                //this.event.trigger('gcode:load');
 
                 log.debug(`Load G-code: name="${this.sender.state.name}", size=${this.sender.state.gcode.length}, total=${this.sender.state.total}`);
 
@@ -1079,12 +1079,13 @@ class MarlinController {
             },
             'gcode:unload': () => {
                 this.workflow.stop();
+                this.engine.unload();
 
                 // Sender
                 this.sender.unload();
 
-                this.emit('gcode:unload');
-                this.event.trigger('gcode:unload');
+                this.emit('file:unload');
+                this.event.trigger('file:unload');
             },
             'start': () => {
                 log.warn(`Warning: The "${cmd}" command is deprecated and will be removed in a future release.`);
@@ -1187,7 +1188,7 @@ class MarlinController {
                     feedOverride += value;
                 }
                 // M220: Set speed factor override percentage
-                this.command('gcode', 'M220S' + feedOverride);
+                this.command('gcode', 'M220 S' + feedOverride);
 
                 // enforce state change
                 this.runner.state = {
@@ -1211,7 +1212,7 @@ class MarlinController {
                     spindleOverride += value;
                 }
                 // M221: Set extruder factor override percentage
-                this.command('gcode', 'M221S' + spindleOverride);
+                this.command('gcode', 'M221 S' + spindleOverride);
 
                 // enforce state change
                 this.runner.state = {
@@ -1233,7 +1234,7 @@ class MarlinController {
             'laser:on': () => {
                 const [power = 0, maxS = 255] = args;
                 const commands = [
-                    'M3S' + ensurePositiveNumber(maxS * (power / 100))
+                    'M3 S' + ensurePositiveNumber(maxS * (power / 100))
                 ];
 
                 this.command('gcode', commands);
@@ -1241,7 +1242,7 @@ class MarlinController {
             'lasertest:on': () => {
                 const [power = 0, duration = 0, maxS = 255] = args;
                 const commands = [
-                    'M3S' + ensurePositiveNumber(maxS * (power / 100))
+                    'M3 S' + ensurePositiveNumber(maxS * (power / 100))
                 ];
                 if (duration > 0) {
                     // G4 [P<time in ms>] [S<time in sec>]
@@ -1279,6 +1280,115 @@ class MarlinController {
                     }
                 }
             },
+            'gcode:safe': () => {
+                const [commands, prefUnits] = args;
+                const deviceUnits = this.state.parserstate.modal.units;
+                let code = [];
+
+                if (!deviceUnits) {
+                    log.error('Unable to determine device unit modal');
+                    return;
+                }
+                // Force command in preferred units
+                if (prefUnits !== deviceUnits) {
+                    code.push(prefUnits);
+                }
+                code = code.concat(commands);
+                // return modal to previous state if they were different previously
+                if (prefUnits !== deviceUnits) {
+                    code = code.concat(deviceUnits);
+                }
+                this.command('gcode', code);
+            },
+            'jog:start': () => {
+                let [axes, feedrate = 1000, units = METRIC_UNITS] = args;
+                //const JOG_COMMAND_INTERVAL = 80;
+                let unitModal = (units === METRIC_UNITS) ? 'G21' : 'G20';
+                let { $20, $130, $131, $132, $23 } = this.settings.settings;
+
+                let jogFeedrate;
+                if ($20 === '1') {
+                    $130 = Number($130);
+                    $131 = Number($131);
+                    $132 = Number($132);
+
+                    // Convert feedrate to metric if working in imperial - easier to convert feedrate and treat everything else as MM than opposite
+                    if (units !== METRIC_UNITS) {
+                        feedrate = (feedrate * 25.4).toFixed(2);
+                        unitModal = 'G21';
+                    }
+
+                    const OFFSET = 0.1;
+                    const FIXED = 2;
+
+                    //If we are moving on the positive direction, we don't need to subtract
+                    //the max travel by it as we are moving towards the zero position, but if
+                    //we are moving in the negative direction we need to subtract the max travel
+                    //by it to reach the maximum amount in that direction
+                    const calculateAxisValue = ({ direction, position, maxTravel }) => {
+                        if (position === 0) {
+                            return ((maxTravel - OFFSET) * direction).toFixed(FIXED);
+                        }
+
+                        if (direction === 1) {
+                            return Number(((position * direction) - OFFSET).toFixed(FIXED));
+                        } else {
+                            return Number(-((maxTravel - position) - OFFSET).toFixed(FIXED));
+                        }
+                    };
+
+
+                    let { mpos } = this.state.status;
+                    Object.keys(mpos).forEach((axis) => {
+                        mpos[axis] = Number(mpos[axis]);
+                    });
+
+                    if (this.homingFlagSet) {
+                        const [xMaxLoc, yMaxLoc] = getAxisMaximumLocation($23);
+
+                        if (axes.X) {
+                            axes.X = determineMaxMovement(Math.abs(mpos.x), axes.X, xMaxLoc, $130);
+                        }
+                        if (axes.Y) {
+                            axes.Y = determineMaxMovement(Math.abs(mpos.y), axes.Y, yMaxLoc, $131);
+                        }
+                    } else {
+                        if (axes.X) {
+                            axes.X = calculateAxisValue({ direction: axes.X, position: Math.abs(mpos.x), maxTravel: $130 });
+                        }
+                        if (axes.Y) {
+                            axes.Y = calculateAxisValue({ direction: axes.Y, position: Math.abs(mpos.y), maxTravel: $131 });
+                        }
+                    }
+
+                    if (axes.Z) {
+                        axes.Z = calculateAxisValue({ direction: axes.Z, position: Math.abs(mpos.z), maxTravel: $132 });
+                    }
+                } else {
+                    jogFeedrate = 1000;
+                    Object.keys(axes).forEach((axis) => {
+                        axes[axis] *= jogFeedrate;
+                    });
+                }
+
+                axes.F = feedrate;
+                if (axes.Z) {
+                    axes.F *= 0.8;
+                    axes.F = axes.F.toFixed(3);
+                }
+
+                const jogCommand = `$J=${unitModal}G91 ` + map(axes, (value, letter) => ('' + letter.toUpperCase() + value)).join(' ');
+                this.command('gcode', jogCommand);
+            },
+            'jog:stop': () => {
+                this.feeder.reset();
+                this.command('jog:cancel');
+                this.feeder.reset();
+            },
+            'jog:cancel': () => {
+                this.command('gcode', '\x85');
+            },
+
             'macro:run': () => {
                 let [id, context = {}, callback = noop] = args;
                 if (typeof context === 'function') {
@@ -1330,6 +1440,38 @@ class MarlinController {
 
                     this.command('gcode:load', file, data, context, callback);
                 });
+            },
+            'machineprofile:load': () => {
+                const [machineProfile] = args;
+
+                store.set('machineProfile', machineProfile);
+            },
+            'settings:updated': () => {
+                const [newSettings = {}] = args;
+
+                const currentSettings = store.get('preferences') || {};
+
+                const updated = {
+                    ...currentSettings,
+                    ...newSettings,
+                };
+
+                store.set('preferences', updated);
+            },
+            'toolchange:context': () => {
+                const [context] = args;
+                this.toolChangeContext = context;
+            },
+            'toolchange:pre': () => {
+            },
+            'toolchange:post': () => {
+            },
+            'gcode:outline': () => {
+                const [gcode = '', concavity = Infinity] = args;
+                const toRun = getOutlineGcode(gcode, concavity);
+                log.debug('Running outline');
+                this.emit('outline:start');
+                this.command('gcode', toRun);
             }
         }[cmd];
 

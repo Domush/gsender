@@ -1,25 +1,3 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -371,13 +349,43 @@ class MacroWidget extends PureComponent {
         if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], type)) {
             return false;
         }
-
+        if (type === GRBL) {
         const activeState = get(state, 'status.activeState');
         const states = [
             GRBL_ACTIVE_STATE_IDLE,
             GRBL_ACTIVE_STATE_RUN
         ];
-        return includes(states, activeState);
+            if (!includes(states, activeState)) {
+                return false;
+            }
+        }
+        if (type === MARLIN) {
+            // Marlin does not have machine state
+        }
+        if (type === SMOOTHIE) {
+            const activeState = get(controllerState, 'status.activeState');
+            const states = [
+                SMOOTHIE_ACTIVE_STATE_IDLE,
+                SMOOTHIE_ACTIVE_STATE_RUN
+            ];
+            if (!includes(states, activeState)) {
+                return false;
+            }
+        }
+        if (type === TINYG) {
+            const machineState = get(controllerState, 'sr.machineState');
+            const states = [
+                TINYG_MACHINE_STATE_READY,
+                TINYG_MACHINE_STATE_STOP,
+                TINYG_MACHINE_STATE_END,
+                TINYG_MACHINE_STATE_RUN
+            ];
+            if (!includes(states, machineState)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     render() {

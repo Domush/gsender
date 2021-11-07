@@ -1,25 +1,3 @@
-/*
- * Copyright (C) 2021 Sienci Labs Inc.
- *
- * This file is part of gSender.
- *
- * gSender is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, under version 3 of the License.
- *
- * gSender is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with gSender.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Contact for information regarding this program and its license
- * can be sent through gSender@sienci.com or mailed to the main office
- * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
- *
- */
 
 import ensureArray from 'ensure-array';
 import noop from 'lodash/noop';
@@ -34,9 +12,11 @@ import store from '../../store';
 import config from '../configstore';
 import taskRunner from '../taskrunner';
 import {
-    GrblController
+    GrblController,
+    MarlinController
 } from '../../controllers';
 import { GRBL } from '../../controllers/Grbl/constants';
+import { MARLIN } from '../../controllers/Marlin/constants';
 import {
     authorizeIPAddress,
     //validateUser
@@ -54,7 +34,12 @@ const caseInsensitiveEquals = (str1, str2) => {
     return str1 === str2;
 };
 
-const isValidController = (controller) => caseInsensitiveEquals(GRBL, controller);
+const isValidController = (controller) => (
+    // Grbl
+    caseInsensitiveEquals(GRBL, controller) ||
+    // Marlin
+    caseInsensitiveEquals(MARLIN, controller) ||
+);
 
 class CNCEngine {
     controllerClass = {};
@@ -111,6 +96,10 @@ class CNCEngine {
         // Grbl
         if (!controller || caseInsensitiveEquals(GRBL, controller)) {
             this.controllerClass[GRBL] = GrblController;
+        }
+        // Marlin
+        if (!controller || caseInsensitiveEquals(MARLIN, controller)) {
+            this.controllerClass[MARLIN] = MarlinController;
         }
 
         if (Object.keys(this.controllerClass).length === 0) {
@@ -214,43 +203,21 @@ class CNCEngine {
                         ports = ports.concat(ensureArray(config.get('ports', [])));
 
                         const controllers = store.get('controllers', {});
-                        const portsInUse =
-                            Object.keys(controllers).filter(port => {
+                        const portsInUse = Object.keys(controllers)
+                            .filter(port => {
                                 const controller = controllers[port];
                                 return controller && controller.isOpen();
                             });
 
-                        // Filter ports by productId to avoid non-arduino devices from appearing
-                        const validProductIDs = ['6015', '6001', '606D', '003D', '0042', '0043', '2341', '7523', 'EA60', '2303', '2145', '0AD8', '08D8'];
-                        const validVendorIDs = ['1D50', '0403', '2341', '0042', '1A86', '10C4', '067B', '03EB', '16D0'];
-                        let [recognizedPorts, unrecognizedPorts] = partition(ports, (port) => {
-                            return validProductIDs.includes(port.productId) && validVendorIDs.includes(port.vendorId);
-                        });
-
-                        /*ports = ports.filter(port => validProductIDs.includes(port.productId));
-                        ports = ports.filter(port => validVendorIDs.includes(port.vendorId));*/
-
-                        const portInfoMapFn = (port) => {
+                        ports = ports.map(port => {
                             return {
                                 port: port.path,
                                 manufacturer: port.manufacturer,
                                 inuse: portsInUse.indexOf(port.path) >= 0
                             };
-                        };
+                        });
 
-                        recognizedPorts = recognizedPorts.map(portInfoMapFn);
-                        unrecognizedPorts = unrecognizedPorts.map(portInfoMapFn);
-                        /*unrecognizedPorts = [{
-                            port: 'COM3',
-                            manufacturer: 'Microsoft',
-                            inuse: false
-                        }, {
-                            port: 'COM7',
-                            manufacturer: 'Broadcom',
-                            inuse: false
-                        }];*/
-
-                        socket.emit('serialport:list', recognizedPorts, unrecognizedPorts);
+                        socket.emit('serialport:list', ports);
                     })
                     .catch(err => {
                         log.error(err);
