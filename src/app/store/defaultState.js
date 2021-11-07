@@ -229,7 +229,7 @@ const defaultState = {
             spindleSpeedMin: 0,
             spindleSpeedMax: 1000
         },
-        grbl: {
+        marlin: {
             minimized: false,
             panel: {
                 queueReports: {

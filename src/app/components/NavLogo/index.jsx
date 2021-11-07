@@ -5,7 +5,7 @@ import styles from './index.styl';
 const NavLogo = ({ updateAvailable = false, onClick }) => {
     return (
         <div className={styles.NavLogo}>
-            <img alt="gSender Logo" src="images/icon-round.png" />
+            <img alt="CNCjs4Marlin Logo" src="images/icon-round.png" />
             {
                 updateAvailable && (
                     <button title="New Version Available!" className={styles.updateNotification} onClick={onClick}>

@@ -72,7 +72,7 @@ const Surfacing = ({ onClose, showTitle }) => {
      * Function to load generated gcode to main visualizer
      */
     const loadGcode = () => {
-        const name = 'gSender_Surfacing';
+        const name = 'CNCjs4Marlin_Surfacing';
         const { size } = new File([gcode], name);
 
         pubsub.publish('gcode:surfacing', { gcode, name, size });

@@ -105,7 +105,7 @@ export default (options) => {
                 {
                     label: 'Learn More',
                     click: () => {
-                        shell.openExternal('https://github.com/Domush/gsender#readme');
+                        shell.openExternal('https://github.com/Domush/cncjs4marlin#readme');
                     }
                 }
             ]

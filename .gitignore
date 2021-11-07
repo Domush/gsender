@@ -3,14 +3,16 @@ npm-debug.log
 package-lock.json
 /.eslintcache
 /.nyc_output
+.yarn*
 /coverage
 /dist
 /output
 /releases
 .idea
 /.vscode
+.pnp.*
 electron-builder.yml
 .DS_Store
 yarn.lock
 yarn-error.log
-gsender_server_log.txt
+cncjs4marlin_server_log.txt

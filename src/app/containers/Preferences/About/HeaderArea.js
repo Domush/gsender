@@ -12,7 +12,7 @@ const HeaderArea = () => {
             <div className={styles.headerLeft}>
                 <img src={logo} alt="" className={styles.logo} />
                 <div style={{ alignSelf: 'center' }}>
-                    <h2 style={{ margin: 0 }}>gSender</h2>
+                    <h2 style={{ margin: 0 }}>CNCjs4Marlin</h2>
                     <small>by Sienci Labs</small>
                     <p>Version {version || '0.6.5'}</p>
                 </div>

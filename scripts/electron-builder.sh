@@ -17,7 +17,7 @@ if [[ ( $# == "--help") ||  $# == "-h" ]]; then
     exit 0
 fi
 
-pushd "$__dirname/../dist/gsender"
+pushd "$__dirname/../dist/cncjs4marlin"
 echo "Cleaning up \"`pwd`/node_modules\""
 rm -rf node_modules
 echo "Installing packages..."
@@ -27,7 +27,7 @@ popd
 #echo "Rebuild native modules using electron ${electron_version}"
 #npm run electron-rebuild -- \
 #    --version=${electron_version:1} \
-#    --module-dir=dist/gsender \
+#    --module-dir=dist/cncjs4marlin \
 #    --which-module=serialport
 
 yarn electron-builder install-app-deps

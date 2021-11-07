@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Sortable from 'react-sortablejs';
 import uuid from 'uuid';
-import { GRBL, MARLIN, SMOOTHIE, TINYG } from 'app/constants';
+import { GRBL, MARLIN } from 'app/constants';
 import { Button } from 'app/components/Buttons';
 import Modal from 'app/components/Modal';
 import controller from 'app/lib/controller';
@@ -195,12 +195,6 @@ class PrimaryWidgets extends Component {
                     return false;
                 }
                 if (name === 'marlin' && !includes(controller.loadedControllers, MARLIN)) {
-                    return false;
-                }
-                if (name === 'smoothie' && !includes(controller.loadedControllers, SMOOTHIE)) {
-                    return false;
-                }
-                if (name === 'tinyg' && !includes(controller.loadedControllers, TINYG)) {
                     return false;
                 }
                 return true;

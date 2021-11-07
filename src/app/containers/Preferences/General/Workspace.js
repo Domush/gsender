@@ -42,7 +42,7 @@ const Workspace = ({ state, actions }) => {
                 </Tooltip>
             </div>
             <div style={{ marginBottom: '10px' }}>
-                <Tooltip content="gSender will warn you on file load if any invalid commands are found" location="default">
+                <Tooltip content="CNCjs4Marlin will warn you on file load if any invalid commands are found" location="default">
                     <ToggleSwitch
                         label="Warn if file contains invalid G-Code"
                         checked={state.showWarning}
@@ -52,7 +52,7 @@ const Workspace = ({ state, actions }) => {
                 </Tooltip>
             </div>
             <div style={{ marginBottom: '10px' }}>
-                <Tooltip content="gSender will warn you while running if any invalid commands are found" location="default">
+                <Tooltip content="CNCjs4Marlin will warn you while running if any invalid commands are found" location="default">
                     <ToggleSwitch
                         label="Warn if invalid line detected during job"
                         checked={state.showLineWarnings}

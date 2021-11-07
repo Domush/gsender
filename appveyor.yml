@@ -111,7 +111,7 @@ for:
             GIT_COMMIT_LOG=`git log -1 --format='%ci %H %s'`
             PACKAGE_NAME=`node -e "console.log(require('./src/package.json').name)"`
             PACKAGE_VERSION=`node -e "console.log(require('./src/package.json').version)"`
-            PRODUCT_NAME=gSender
+            PRODUCT_NAME=cncjs4marlin
             yarn build:linux-ia32
             ls -al output output/*
             mkdir -p releases/linux
@@ -126,7 +126,7 @@ for:
             ls -al releases/linux/*
             if [[ "$CI_BRANCH" == "master" && -z "$CI_TAG" ]]; then
               yarn github-release delete \
-                --owner=gSender \
+                --owner=cncjs4marlin \
                 --repo=sender \
                 --tag="${CI_BRANCH}" \
                 --release-name="${CI_BRANCH}" \
@@ -156,7 +156,7 @@ for:
             GIT_COMMIT_LOG=`git log -1 --format='%ci %H %s'`
             PACKAGE_NAME=`node -e "console.log(require('./src/package.json').name)"`
             PACKAGE_VERSION=`node -e "console.log(require('./src/package.json').version)"`
-            PRODUCT_NAME=gSender
+            PRODUCT_NAME=CNCjs4Marlin
             yarn build:linux-x64
             ls -al output output/*
             mkdir -p releases/linux
@@ -201,7 +201,7 @@ for:
             GIT_COMMIT_LOG=`git log -1 --format='%ci %H %s'`
             PACKAGE_NAME=`node -e "console.log(require('./src/package.json').name)"`
             PACKAGE_VERSION=`node -e "console.log(require('./src/package.json').version)"`
-            PRODUCT_NAME=gSender
+            PRODUCT_NAME=CNCjs4Marlin
             yarn build:linux-armv7l
             ls -al output output/*
             mkdir -p releases/linux
@@ -246,7 +246,7 @@ for:
             GIT_COMMIT_LOG=`git log -1 --format='%ci %H %s'`
             PACKAGE_NAME=`node -e "console.log(require('./src/package.json').name)"`
             PACKAGE_VERSION=`node -e "console.log(require('./src/package.json').version)"`
-            PRODUCT_NAME=gSender
+            PRODUCT_NAME=CNCjs4Marlin
             yarn build:linux-arm64
             ls -al output output/*
             mkdir -p releases/linux
@@ -355,7 +355,7 @@ for:
             GIT_COMMIT_LOG=`git log -1 --format='%ci %H %s'`
             PACKAGE_NAME=`node -e "console.log(require('./src/package.json').name)"`
             PACKAGE_VERSION=`node -e "console.log(require('./src/package.json').version)"`
-            PRODUCT_NAME=gSender
+            PRODUCT_NAME=CNCjs4Marlin
             yarn build:macos-x64
             ls -al output output/*
             mkdir -p releases/macos
@@ -447,7 +447,7 @@ for:
             $GIT_COMMIT_LOG = git log -1 --format='%ci %H %s'
             $PACKAGE_NAME = node -e "console.log(require('./src/package.json').name)"
             $PACKAGE_VERSION = node -e "console.log(require('./src/package.json').version)"
-            $PRODUCT_NAME = "gSender"
+            $PRODUCT_NAME = "CNCjs4Marlin"
             mkdir -Force -Path releases\windows
             yarn build:windows-x64
             Get-ChildItem output
@@ -475,7 +475,7 @@ for:
             $GIT_COMMIT_LOG = git log -1 --format='%ci %H %s'
             $PACKAGE_NAME = node -e "console.log(require('./src/package.json').name)"
             $PACKAGE_VERSION = node -e "console.log(require('./src/package.json').version)"
-            $PRODUCT_NAME = "gSender"
+            $PRODUCT_NAME = "CNCjs4Marlin"
             mkdir -Force -Path releases\windows
             yarn build:windows-ia32
             Get-ChildItem output

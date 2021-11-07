@@ -246,8 +246,8 @@ class Controller {
     // Opens a connection to the given serial port.
     // @param {string} port The path of the serial port you want to open. For example, `dev/tty.XXX` on Mac and Linux, or `COM1` on Windows.
     // @param {object} [options] The options object.
-    // @param {string} [options.controllerType] One of: 'Grbl', 'Smoothe', 'TinyG'. Defaults to 'Grbl'.
-    // @param {number} [options.baudrate] Defaults to 115200.
+    // @param {string} [options.controllerType] One of: 'Grbl', 'Marlin'. Defaults to 'Marlin'.
+    // @param {number} [options.baudrate] Defaults to 250000.
     // @param {function} [callback] Called after a connection is opened.
     openPort(port, options, callback) {
         if (typeof options !== 'object') {

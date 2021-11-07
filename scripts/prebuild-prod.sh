@@ -4,12 +4,12 @@ mkdir -p dist
 rm -rf dist/*
 
 pushd src
-mkdir -p ../dist/gsender/
-cp -af package.json ../dist/gsender/
+mkdir -p ../dist/cncjs4marlin/
+cp -af package.json ../dist/cncjs4marlin/
 cross-env NODE_ENV=production babel "*.js" \
     --config-file ../babel.config.js \
-    --out-dir ../dist/gsender
+    --out-dir ../dist/cncjs4marlin
 cross-env NODE_ENV=production babel "electron-app/**/*.js" \
     --config-file ../babel.config.js \
-    --out-dir ../dist/gsender/electron-app
+    --out-dir ../dist/cncjs4marlin/electron-app
 popd

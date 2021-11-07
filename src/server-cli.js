@@ -27,7 +27,7 @@ const parseMountPoint = (val, acc) => {
         mount.target = r[2];
     }
 
-    // mount.route is interpreted by gSender code that uses posix syntax
+    // mount.route is interpreted by CNCjs4Marlin code that uses posix syntax
     // where the separator is / , so we perform this join in posix mode
     // mode to avoid introducing \ separators when running on Windows.
     mount.route = path.posix.join('/', mount.route || '').trim(); // path.join('/', 'pendant') => '/pendant'
@@ -76,7 +76,7 @@ program.on('--help', () => {
     console.log('    $ cncjs --watch-directory /home/pi/watch');
     console.log('    $ cncjs --access-token-lifetime 60d  # e.g. 3600, 30m, 12h, 30d');
     console.log('    $ cncjs --allow-remote-access');
-    console.log('    $ cncjs --controller Grbl');
+    console.log('    $ cncjs --controller Marlin');
     console.log('');
 });
 

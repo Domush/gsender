@@ -1,9 +1,8 @@
 {
-  "name": "CNCjs for Marlin - w/ gSender UI",
+  "name": "cncjs4marlin",
   "version": "0.0.1",
   "productName": "CNCjs_for_Marlin",
   "description": "Web-based gCode sender",
-  "homepage": "https://github.com/cncjs/cncjs",
   "author": {
     "name": "Edward W <CNCjs@webbsense.com>",
     "email": "CNCjs@webbsense.com"
@@ -11,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Domush/gsender"
+    "url": "https://github.com/Domush/cncjs4marlin"
   },
   "main": "main.js",
   "dependencies": {

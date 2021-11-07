@@ -22,7 +22,7 @@
     "Password": "Password",
     "Sign In": "Sign In",
     "Units": "Units",
-    "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG": "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG",
+    "A web-based interface for CNC milling controller running Marlin": "A web-based interface for CNC milling controller running Marlin",
     "Checking for updates...": "Checking for updates...",
     "A new version of {{name}} is available": "A new version of {{name}} is available",
     "Version {{version}}": "Version {{version}}",

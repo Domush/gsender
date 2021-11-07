@@ -30,7 +30,7 @@ const logger = winston.createLogger({
             handleExceptions: true
         }),
         new winston.transports.File({
-            filename: 'gsender4Marlin_server_log.txt',
+            filename: 'cncjs4marlin4Marlin_server_log.txt',
             level: 'info'
         })
     ]

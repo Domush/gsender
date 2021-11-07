@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 import gamepad, { runAction } from 'app/lib/gamepad';
 import combokeys from 'app/lib/combokeys';
 import controller from 'app/lib/controller';
-import { GRBL } from 'app/constants';
+import { Marlin } from 'app/constants';
 import store from 'app/store';
 import HelpModal from 'app/containers/Help';
 import NavSidebarLink from './NavSideBarLink';
@@ -27,7 +27,7 @@ class NavSidebar extends PureComponent {
     state = this.getInitialState();
 
     openHelpPage = () => {
-        window.open('https://sienci.com/gsender-documentation/', '_blank');
+        window.open('https://sienci.com/cncjs4marlin-documentation/', '_blank');
     }
 
     reconnectToLastDevice(port, baudrate, controllerType) {
@@ -49,7 +49,7 @@ class NavSidebar extends PureComponent {
                 const { port, baudrate } = connection;
 
                 if (port && baudrate) {
-                    this.reconnectToLastDevice(port, baudrate, GRBL);
+                    this.reconnectToLastDevice(port, baudrate, Marlin);
                 }
                 return;
             }

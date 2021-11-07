@@ -4,7 +4,7 @@ import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
 import { connect } from 'react-redux';
-import { GRBL } from 'app/constants';
+import { Marlin } from 'app/constants';
 import includes from 'lodash/includes';
 //import map from 'lodash/map';
 import PropTypes from 'prop-types';
@@ -126,7 +126,7 @@ class NavbarConnectionWidget extends PureComponent {
             alertMessage: '',
             connecting: false,
             connected: true,
-            controllerType: GRBL,
+            controllerType: Marlin,
             port: port,
             baudrate: connectedBaudrate
         }));
@@ -283,7 +283,7 @@ class NavbarConnectionWidget extends PureComponent {
         }));
 
         controller.openPort(port, {
-            controllerType: GRBL,
+            controllerType: Marlin,
             baudrate: baudrate,
             rtscts: this.state.connection.serial.rtscts
         }, (err) => {
@@ -345,7 +345,7 @@ class NavbarConnectionWidget extends PureComponent {
             ...this.state,
             ports,
             unrecognizedPorts,
-            controllerType: GRBL,
+            controllerType: Marlin,
         };
         const actions = {
             ...this.actions

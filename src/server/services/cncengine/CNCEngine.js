@@ -38,7 +38,7 @@ const isValidController = (controller) => (
     // Grbl
     caseInsensitiveEquals(GRBL, controller) ||
     // Marlin
-    caseInsensitiveEquals(MARLIN, controller) ||
+    caseInsensitiveEquals(MARLIN, controller)
 );
 
 class CNCEngine {
@@ -234,7 +234,7 @@ class CNCEngine {
 
                 let controller = store.get(`controllers["${port}"]`);
                 if (!controller) {
-                    let { controllerType = GRBL, baudrate, rtscts } = { ...options };
+                    let { controllerType = Marlin, baudrate, rtscts } = { ...options };
 
                     const Controller = this.controllerClass[controllerType];
                     if (!Controller) {

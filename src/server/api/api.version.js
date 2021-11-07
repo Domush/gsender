@@ -7,7 +7,7 @@ import {
     ERR_INTERNAL_SERVER_ERROR
 } from '../constants';
 
-const pkgName = 'gsender';
+const pkgName = 'cncjs4marlin';
 
 export const getLatestVersion = (req, res) => {
     const scope = pkgName.split('/')[0];

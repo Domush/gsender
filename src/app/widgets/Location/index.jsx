@@ -561,7 +561,7 @@ class LocationWidget extends PureComponent {
         if (workflow.state === WORKFLOW_STATE_RUNNING) {
             return false;
         }
-        if (!includes([GRBL, MARLIN, SMOOTHIE, TINYG], type)) {
+        if (!includes([GRBL, MARLIN], type)) {
             return false;
         }
 

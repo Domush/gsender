@@ -255,7 +255,7 @@ class MacroWidget extends PureComponent {
         });
 
         const today = new Date();
-        const filename = `gSender-macros-${today.toLocaleDateString()}-${today.toLocaleTimeString()}`;
+        const filename = `CNCjs4Marlin-macros-${today.toLocaleDateString()}-${today.toLocaleTimeString()}`;
 
         // IE11 & Edge
         if (navigator.msSaveBlob) {

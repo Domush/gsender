@@ -15,7 +15,7 @@ const Settings = () => {
     const handleRestoreClick = () => {
         Confirm({
             title: 'Restore Settings',
-            content: 'All your current settings will be removed. Are you sure you want to restore default settings on gSender?',
+            content: 'All your current settings will be removed. Are you sure you want to restore default settings on CNCjs4Marlin?',
             confirmLabel: 'Restore Settings',
             onConfirm: restoreDefaultSettings
         });
@@ -34,7 +34,7 @@ const Settings = () => {
 
         Confirm({
             title: 'Import Settings',
-            content: 'All your current settings will be replaced. Are you sure you want to import your settings on gSender?',
+            content: 'All your current settings will be replaced. Are you sure you want to import your settings on CNCjs4Marlin?',
             confirmLabel: 'Import Settings',
             onConfirm: () => onImportConfirm(file)
         });
@@ -74,7 +74,7 @@ const Settings = () => {
         });
 
         const today = new Date();
-        const filename = `gSender-settings-${today.toLocaleDateString()}-${today.toLocaleTimeString()}`;
+        const filename = `CNCjs4Marlin-settings-${today.toLocaleDateString()}-${today.toLocaleTimeString()}`;
 
         // IE11 & Edge
         if (navigator.msSaveBlob) {
@@ -92,7 +92,7 @@ const Settings = () => {
 
     return (
         <Fieldset legend="Settings">
-            <Button primary style={{ margin: 0 }} onClick={handleRestoreClick}>Restore Default gSender Settings</Button>
+            <Button primary style={{ margin: 0 }} onClick={handleRestoreClick}>Restore Default CNCjs4Marlin Settings</Button>
 
             <div style={{ display: 'flex', gap: '1rem' }}>
                 <Button

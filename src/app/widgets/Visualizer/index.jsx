@@ -598,7 +598,7 @@ class VisualizerWidget extends PureComponent {
             this.setState(prev => ({ invalidGcode: { ...prev.invalidGcode, list: invalidGcode } }));
             if (this.state.invalidGcode.shouldShow) {
                 Toaster.pop({
-                    msg: `Found ${invalidGcode.size} line(s) of non-GRBL-supported G-Code in this file.  Your job may not run properly.`,
+                    msg: `Found ${invalidGcode.size} line(s) of non-Marlin-supported G-Code in this file.  Your job may not run properly.`,
                     type: TOASTER_WARNING,
                     duration: TOASTER_LONG,
                     icon: 'fa-exclamation-triangle'
