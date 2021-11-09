@@ -1,6 +1,6 @@
 import ensureArray from 'ensure-array';
 import * as parser from 'gcode-parser';
-import Toolpath from 'gcode-toolpath';
+// import Toolpath from 'gcode-toolpath';
 import _ from 'lodash';
 import map from 'lodash/map';
 import SerialConnection from '../../lib/SerialConnection';
@@ -12,7 +12,7 @@ import Workflow, {
     WORKFLOW_STATE_PAUSED,
     WORKFLOW_STATE_RUNNING
 } from '../../lib/Workflow';
-import delay from '../../lib/delay';
+// import delay from '../../lib/delay';
 import ensurePositiveNumber from '../../lib/ensure-positive-number';
 import evaluateAssignmentExpression from '../../lib/evaluate-assignment-expression';
 import logger from '../../lib/logger';
@@ -36,7 +36,7 @@ import {
     QUERY_TYPE_POSITION,
 } from './constants';
 import { METRIC_UNITS } from '../../../app/constants';
-import { determineMachineZeroFlagSet, determineMaxMovement, getAxisMaximumLocation } from '../../lib/homing';
+import { determineMaxMovement, getAxisMaximumLocation } from '../../lib/homing';
 
 // % commands
 const WAIT = '%wait';
@@ -347,15 +347,12 @@ class MarlinController {
                 { // Program Mode: M0, M1
                     const programMode = _.intersection(words, ['M0', 'M1'])[0];
                     if (programMode === 'M0') {
-                        log.debug(`M0 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
-                        // Workaround for Carbide files - prevent M0 early from pausing program
-                        if (sent > 10) {
-                            this.workflow.pause({ data: 'M0' });
-                            this.emit('workflow:pause', { data: 'M0' });
-                        }
+                        log.debug('M0 Program Pause');
+                        this.workflow.pause({ data: 'M0' });
+                        this.emit('workflow:pause', { data: 'M0' });
                         return line.replace('M0', '(M0)');
                     } else if (programMode === 'M1') {
-                        log.debug(`M1 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
+                        log.debug('M1 Program Pause');
                         this.workflow.pause({ data: 'M1' });
                         this.emit('workflow:pause', { data: 'M1' });
                         return line.replace('M1', '(M1)');
@@ -409,8 +406,8 @@ class MarlinController {
 
         // Sender
         this.sender = new Sender(SP_TYPE_CHAR_COUNTING, {
-//            // Deduct the buffer size to prevent from buffer overrun
-//            bufferSize: (128 - 8), // The default buffer size is 128 bytes
+            //            // Deduct the buffer size to prevent from buffer overrun
+            //            bufferSize: (128 - 8), // The default buffer size is 128 bytes
             dataFilter: (line, context) => {
                 // Remove comments that start with a semicolon `;`
                 line = line.replace(/\s*;.*/g, '').trim();

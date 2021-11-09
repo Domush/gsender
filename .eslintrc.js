@@ -2,7 +2,13 @@ const path = require('path');
 
 module.exports = {
   extends: 'trendmicro',
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
+  parserOptions: {
+    'fix': true,
+    'ecmaFeatures': {
+      'experimentalObjectRestSpread': true
+    }
+  },
   env: {
     browser: true,
     node: true
@@ -23,6 +29,8 @@ module.exports = {
     }
   },
   rules: {
+    'indent': [0, 2],
+    'no-multiple-empty-lines': [0, 0],
     'max-lines-per-function': [1, {
       max: 512,
       skipBlankLines: true,

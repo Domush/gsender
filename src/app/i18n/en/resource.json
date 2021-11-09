@@ -22,7 +22,6 @@
     "Password": "Password",
     "Sign In": "Sign In",
     "Units": "Units",
-    "A web-based interface for CNC milling controller running Marlin": "A web-based interface for CNC milling controller running Marlin",
     "Checking for updates...": "Checking for updates...",
     "A new version of {{name}} is available": "A new version of {{name}} is available",
     "Version {{version}}": "Version {{version}}",
@@ -123,10 +122,6 @@
     "This widget displays the job progression and feed and spindle overrides.": "This widget displays the job progression and feed and spindle overrides.",
     "Marlin Widget": "Marlin Widget",
     "This widget shows the Marlin state and provides Marlin specific features.": "This widget shows the Marlin state and provides Marlin specific features.",
-    "Smoothie Widget": "Smoothie Widget",
-    "This widget shows the Smoothie state and provides Smoothie specific features.": "This widget shows the Smoothie state and provides Smoothie specific features.",
-    "TinyG Widget": "TinyG Widget",
-    "This widget shows the TinyG state and provides TinyG specific features.": "This widget shows the TinyG state and provides TinyG specific features.",
     "This widget shows the XYZ position. It includes jog controls, homing, and axis zeroing.": "This widget shows the XYZ position. It includes jog controls, homing, and axis zeroing.",
     "This widget displays machine and work coordinates for all axes": "This widget displays machine and work coordinates for all axes",
     "G-code Widget": "G-code Widget",
@@ -392,5 +387,7 @@
     "Server Connection Lost": "Server Connection Lost",
     "It looks like the server connection has been lost - attempt to reconnect?": "It looks like the server connection has been lost - attempt to reconnect?",
     "Attempt Reconnect": "Attempt Reconnect",
-    "Click \"Resume\" to continue execution.": "Click \"Resume\" to continue execution."
+    "Click \"Resume\" to continue execution.": "Click \"Resume\" to continue execution.",
+    "A web-based interface for CNC milling controller running Grbl, Marlin": "A web-based interface for CNC milling controller running Grbl, Marlin",
+    "Edit Macro": "Edit Macro"
 }

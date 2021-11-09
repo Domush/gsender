@@ -16,7 +16,7 @@
 }
 
 .relative-wrapper {
-    position relative;
+    position: relative;
 }
 
 .icon {
@@ -44,7 +44,7 @@
     min-width: 12rem;
 
     i {
-        margin-left: 0.5rem;
+        margin-left: .5rem;
     }
 }
 
@@ -75,9 +75,9 @@
     border-left: solid 1px #FFFFFF;
     height: 50%;
     min-width: 30px;
-    display flex;
-    align-items center;
-    justify-content center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 10;
     color: #ffffff;
     i {
@@ -94,9 +94,9 @@
     border-bottom: solid 1px #fff;
     height: 50%;
     min-width: 30px;
-    display flex;
-    align-items center;
-    justify-content center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 10;
     color: #ffffff;
     i {
@@ -121,19 +121,19 @@
 .workflow-button {
     btn-mixin(color) {
         @extend .workflow-btn;
-        background-color: rgba(color, .8);
+        background-color: rgba($color, .8);
         --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         transition: 150ms ease-in-out;
 
         &:disabled {
-            disabled-color = rgba(color, .5);
-            background-color: disabled-color;
+            disabled-color = rgba($color, .5);
+            background-color: $disabled-color;
             color: rgba(black, .2);
         }
 
         &:not(:disabled):hover {
-            background-color: darken(color, 30%);
+            background-color: darken($color, 30%);
             transition: 150ms ease-in-out;
         }
     }
@@ -197,20 +197,20 @@
     }
 
     &-upload {
-        color = #3e85c7;
-        btn-mixin(color);
+        $color = #3e85c7;
+        btn-mixin($color);
     }
 
      &-test {
-        color =#5191cc;
-        btn-mixin(color)
-        padding: 0.3rem 1rem !important;
+        $color = #5191cc;
+        btn-mixin($color);
+        padding: .3rem 1rem !important;
         min-width: 0 !important;
         display: flex;
-        flex-direction column-reverse;
-        align-items center;
-        justify-content: center
-        gap: 0.3rem;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+        gap: .3rem;
 
          i {
              margin: 0 !important;
@@ -220,18 +220,18 @@
     }
 
     &-play {
-        color = #059669;
-        btn-mixin(color);
+        $color = #059669;
+        btn-mixin($color);
     }
 
     &-pause {
-        color = #D97706;
-        btn-mixin(color);
+        $color = #D97706;
+        btn-mixin($color);
     }
 
     &-stop {
-        color = #dc2626;
-        btn-mixin(color);
+        $color = #dc2626;
+        btn-mixin($color);
     }
 }
 
@@ -242,21 +242,21 @@
     width: 2.5rem;
     height: 2.5rem;
     margin: 0 1rem;
-    display flex;
-    align-items center;
-    justify-content center;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    pointer-events all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, .35) 0px 5px 15px;
+    pointer-events: all;
     i {
         font-size: 2rem !important;
-        color: #6c6c6c
+        color: #6c6c6c;
     }
 }
 
 
 .split-container {
     display: flex;
-    flex-direction row;
-    gap: 0.1rem;
+    flex-direction: row;
+    gap: .1rem;
     justify-content: space-between;
 }

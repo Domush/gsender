@@ -1,7 +1,7 @@
 
 import ensureArray from 'ensure-array';
 import noop from 'lodash/noop';
-import partition from 'lodash/partition';
+// import partition from 'lodash/partition';
 import SerialPort from 'serialport';
 import socketIO from 'socket.io';
 //import socketioJwt from 'socketio-jwt';
@@ -93,13 +93,13 @@ class CNCEngine {
             controller = '';
         }
 
-        // Grbl
-        if (!controller || caseInsensitiveEquals(GRBL, controller)) {
-            this.controllerClass[GRBL] = GrblController;
-        }
         // Marlin
         if (!controller || caseInsensitiveEquals(MARLIN, controller)) {
             this.controllerClass[MARLIN] = MarlinController;
+        }
+        // Grbl
+        if (caseInsensitiveEquals(GRBL, controller)) {
+            this.controllerClass[GRBL] = GrblController;
         }
 
         if (Object.keys(this.controllerClass).length === 0) {
@@ -234,7 +234,7 @@ class CNCEngine {
 
                 let controller = store.get(`controllers["${port}"]`);
                 if (!controller) {
-                    let { controllerType = Marlin, baudrate, rtscts } = { ...options };
+                    let { controllerType = MARLIN, baudrate, rtscts } = { ...options };
 
                     const Controller = this.controllerClass[controllerType];
                     if (!Controller) {

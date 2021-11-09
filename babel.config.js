@@ -1,10 +1,19 @@
 module.exports = {
-  extends: '@trendmicro/babel-config',
-  presets: [
-    '@babel/preset-env',
+    extends: '@trendmicro/babel-config',
+    presets: [
+        [
+            '@babel/preset-env',
+            {
+                'targets': {
+                    'esmodules': true
+                }
+            }
+        ],
     '@babel/preset-react'
-  ],
-  plugins: [
-    'lodash'
-  ]
+    ],
+    plugins: [
+        'lodash',
+        '@babel/proposal-object-rest-spread',
+        '@babel/plugin-syntax-export-default-from'
+    ]
 };

@@ -1,7 +1,7 @@
 
 .firmwareHeader {
   display: flex;
-  align-items center;
+  align-items: center;
   margin-bottom: 0;
   border-bottom: solid 1px #9CA3AF;
   height: 60px;
@@ -22,7 +22,7 @@
 
 .settingsContainer {
   width: 80%;
-  flex-grow: 1
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -131,20 +131,20 @@
 
 .keyRow {
   width: 20%;
-  text-align center;
+  text-align: center;
   font-size: 2rem;
   color: #6B7280;
-  display flex;
-  flex-direction column;
-  justify-content space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 10px;
-  align-items center
+  align-items: center;
 }
 
 .settings-description {
   width: 80%;
-  display flex;
-  flex-direction column;
+  display: flex;
+  flex-direction: column;
 }
 
 .containerFluid {
@@ -162,7 +162,7 @@
 
 .table-row {
   display: grid;
-  grid-template-columns 2fr 1fr;
+  grid-template-columns: 2fr 1fr;
   padding: 1rem 0;
 }
 
@@ -199,13 +199,13 @@
   font-size: 1.6rem;
   margin: 0;
   padding: 0;
-  color: #6c6c6c
+  color: #6c6c6c;
 }
 
 .warning-explanation {
   font-size: 1.1rem;
   margin: 2rem 0;
-  color: #6c6c6c
+  color: #6c6c6c;
 }
 
 
@@ -216,12 +216,12 @@
   background: none;
   background: #3e85c7;
   color: #FFFFFF;
-  align-items stretch
+  align-items: stretch;
   padding: 0;
   border-radius: 0.25rem;
 
   &:hover {
-    background: #5191cc
+    background: #5191cc;
   }
 }
 
@@ -232,12 +232,12 @@
 .reconnect-icon {
   background: #295d8d;
   display: flex;
-  flex-direction column;
-  align-items stretch;
-  justify-content center;
-  flex-grow 1;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  flex-grow: 1;
   min-width: 2rem;
-  overflow: hidden
+  overflow: hidden;
 
   i {
     font-size: 1.6rem !important;
@@ -248,7 +248,7 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  align-items center
+  align-items: center;
 }
 
 .settings-control {
@@ -256,24 +256,24 @@
   height: 100%;
   display: flex;
   padding: 0 0.25rem;
-  justify-content center;
-  align-items: center
+  justify-content: center;
+  align-items: center;
 }
 
 .toolModal {
   width: 1000px;
   height: 700px;
   display: flex;
-  flex-direction column;
+  flex-direction: column;
   flex-grow: 1;
 }
 
 
 .category-tag {
   tag-mixin(color, background) {
-    background-color: background;
-    color: color;
-    border: solid 1px color;
+    background-color: $background;
+    color: $color;
+    border: solid 1px $color;
     border-radius: 5px;
     padding: 3px;
     margin: 0 1rem;
@@ -281,26 +281,26 @@
   }
 
   &-GRBL {
-    tag-mixin(#3e85c7, #9fc2e3)
+    tag-mixin(#3e85c7, #9fc2e3);
   }
 
   &-Motors {
-    tag-mixin(#036949, #06b881)
+    tag-mixin(#036949, #06b881);
   }
 
   &-Limits {
-    tag-mixin(#9b1919, #e66767)
+    tag-mixin(#9b1919, #e66767);
   }
 
   &-Homing {
-    tag-mixin(#975304, #f9a13b)
+    tag-mixin(#975304, #f9a13b);
   }
 
   &-Pins {
-    tag-mixin(#4b5563, #d1d5db)
+    tag-mixin(#4b5563, #d1d5db);
   }
 
   &-Spindle {
-    tag-mixin(#13283c, #d8e7f4)
+    tag-mixin(#13283c, #d8e7f4);
   }
 }
