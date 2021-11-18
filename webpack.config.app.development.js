@@ -1,15 +1,15 @@
 const path = require('path');
-const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const dotenv = require('dotenv');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const without = require('lodash/without');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const nib = require('nib');
-const stylusLoader = require('stylus-loader');
+const without = require('lodash/without');
 const webpack = require('webpack');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
+const stylusLoader = require('stylus-loader');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const babelConfig = require('./babel.config');
 const buildConfig = require('./build.config');
 const pkg = require('./package.json');
@@ -152,9 +152,12 @@ module.exports = {
         ]
     },
     node: {
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty'
+        // fs: 'empty',
+        // net: 'empty',
+        // tls: 'empty'
+        global: true,
+        __filename: true, // Use relative path
+        __dirname: true, // Use relative path
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),

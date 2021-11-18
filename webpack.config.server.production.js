@@ -4,13 +4,13 @@ const {
     boolean
 } = require('boolean');
 const dotenv = require('dotenv');
+const webpack = require('webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const babelConfig = require('./babel.config');
 const pkg = require('./package.json');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 const myEslintOptions = {
     extensions: ['js', 'jsx', 'ts'],

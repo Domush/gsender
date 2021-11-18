@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const path = require('path');
 const webpack = require('webpack');
-const nodeExternals = require('webpack-node-externals');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 const babelConfig = require('./babel.config');
 const pkg = require('./package.json');
 
