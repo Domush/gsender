@@ -1,15 +1,13 @@
 const crypto = require('crypto');
 const path = require('path');
-const {
-    boolean
-} = require('boolean');
+const boolean = require('boolean');
 const dotenv = require('dotenv');
 const nib = require('nib');
 const findImports = require('find-imports');
 const without = require('lodash/without');
 const webpack = require('webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const stylusLoader = require('stylus-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -18,11 +16,6 @@ const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const babelConfig = require('./babel.config');
 const buildConfig = require('./build.config');
 const pkg = require('./package.json');
-
-const myEslintOptions = {
-    extensions: ['js', 'jsx', 'ts'],
-    exclude: ['node_modules'],
-};
 
 dotenv.config({
     path: path.resolve('webpack.config.app.production.env')
@@ -81,7 +74,7 @@ module.exports = {
             },
             USE_ESLINT_LOADER && {
                 test: /\.jsx?$/,
-            loader: 'babel-loader',
+                loader: 'eslint-loader',
             exclude: /node_modules/,
             enforce: 'pre',
                 options: {
@@ -107,18 +100,7 @@ module.exports = {
                             importLoaders: 1,
                         }
                     },
-                    {
-                        loader: 'stylus-loader',
-                        options: {
-                            stylusOptions: {
-                                // nib - CSS3 extensions for Stylus
-                                use: [nib()],
-                                // no need to have a '@import "nib"' in the stylesheet
-                                import: ['~nib/lib/nib/index.styl']
-
-                            }
-                        }
-                    }
+                    'stylus-loader'
                 ],
                 exclude: [
                     path.resolve(__dirname, 'src/app/styles')
@@ -135,18 +117,7 @@ module.exports = {
                             camelCase: true,
                         }
                     },
-                    {
-                        loader: 'stylus-loader',
-                        options: {
-                            stylusOptions: {
-                                // nib - CSS3 extensions for Stylus
-                                use: [nib()],
-                                // no need to have a '@import "nib"' in the stylesheet
-                                import: ['~nib/lib/nib/index.styl']
-
-                            }
-                        }
-                    }
+                    'stylus-loader'
                 ],
                 include: [
                     path.resolve(__dirname, 'src/app/styles')
@@ -155,20 +126,8 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    {
-                        loader: 'stylus-loader',
-                        options: {
-                            stylusOptions: {
-                                // nib - CSS3 extensions for Stylus
-                                use: [nib()],
-                                // no need to have a '@import "nib"' in the stylesheet
-                                import: ['~nib/lib/nib/index.styl']
-
-                            }
-                        }
-                    }
+                    'style-loader',
+                    'css-loader'
                 ]
             },
             {
@@ -230,9 +189,9 @@ module.exports = {
         ].filter(Boolean)
     },
     node: {
-        // fs: 'empty',
-        // net: 'empty',
-        // tls: 'empty'
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
         global: true,
         __filename: true, // Use relative path
         __dirname: true, // Use relative path
@@ -257,12 +216,20 @@ module.exports = {
                 TRACKING_ID: JSON.stringify(buildConfig.analytics.trackingId)
             }
         }),
+        new stylusLoader.OptionsPlugin({
+            default: {
+                // nib - CSS3 extensions for Stylus
+                use: [nib()],
+                // no need to have a '@import "nib"' in the stylesheet
+                import: ['~nib/lib/nib/index.styl']
+            }
+        }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
             new RegExp('^\./(' + without(buildConfig.languages, 'en').join('|') + ')$')
         ),
         // Generates a manifest.json file in your root output directory with a mapping of all source file names to their corresponding output file.
-        new ManifestPlugin.WebpackManifestPlugin({
+        new ManifestPlugin({
             fileName: 'manifest.json'
         }),
         new MiniCssExtractPlugin({
@@ -277,8 +244,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             chunksSortMode: 'dependency' // Sort chunks by dependency
-        }),
-        new ESLintPlugin(myEslintOptions),
+        })
     ],
     resolve: {
         modules: [

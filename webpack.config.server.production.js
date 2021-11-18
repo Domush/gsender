@@ -1,21 +1,13 @@
 const crypto = require('crypto');
 const path = require('path');
-const {
-    boolean
-} = require('boolean');
+const boolean = require('boolean');
 const dotenv = require('dotenv');
-const webpack = require('webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const babelConfig = require('./babel.config');
 const pkg = require('./package.json');
-
-const myEslintOptions = {
-    extensions: ['js', 'jsx', 'ts'],
-    exclude: ['node_modules'],
-};
 
 dotenv.config({
     path: path.resolve('webpack.config.server.production.env')
@@ -66,18 +58,14 @@ module.exports = {
             filename: 'index.html',
             template: path.resolve(__dirname, 'index.html'),
         }),
-        new ESLintPlugin(myEslintOptions),
     ],
     module: {
         rules: [
             USE_ESLINT_LOADER && {
                 test: /\.jsx?$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/,
+                loader: 'eslint-loader',
                 enforce: 'pre',
-                options: {
-                    sourceType: 'unambiguous'
-                },
+                exclude: /node_modules/
             },
             {
                 test: /\.hex$/,
@@ -133,9 +121,9 @@ module.exports = {
         global: true,
         __filename: true, // Use relative path
         __dirname: true, // Use relative path
-        // console: true,
-        // process: true,
-        // Buffer: true,
-        // setImmediate: true
+        console: true,
+        process: true,
+        Buffer: true,
+        setImmediate: true
     }
 };

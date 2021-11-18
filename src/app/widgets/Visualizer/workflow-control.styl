@@ -121,19 +121,19 @@
 .workflow-button {
     btn-mixin(color) {
         @extend .workflow-btn;
-        background-color: rgba($color, .8);
+        background-color: rgba(color, .8);
         --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         transition: 150ms ease-in-out;
 
         &:disabled {
-            disabled-color = rgba($color, .5);
+            $disabled-color = rgba(color, .5);
             background-color: $disabled-color;
             color: rgba(black, .2);
         }
 
         &:not(:disabled):hover {
-            background-color: darken($color, 30%);
+            background-color: darken(color, 30%);
             transition: 150ms ease-in-out;
         }
     }

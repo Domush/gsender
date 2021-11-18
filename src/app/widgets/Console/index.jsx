@@ -4,6 +4,8 @@ import color from 'cli-color';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import uuid from 'uuid';
+import settings from 'app/config/settings';
+//import Space from 'app/components/Space';
 import Widget from 'app/components/Widget';
 import controller from 'app/lib/controller';
 import i18n from 'app/lib/i18n';

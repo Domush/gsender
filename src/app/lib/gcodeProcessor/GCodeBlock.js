@@ -1,8 +1,11 @@
 
 class GCodeBlock {
     words = null;
+
     pairs = null;
+
     flatPairs = null;
+
     line = ''
 
     constructor(words, line) {

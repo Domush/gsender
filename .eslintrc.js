@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   extends: 'trendmicro',
-  parser: '@babel/eslint-parser',
+  parser: 'babel-eslint',
   parserOptions: {
     'fix': true,
     'ecmaFeatures': {
@@ -39,7 +39,11 @@ module.exports = {
     'react/jsx-no-bind': [1, {
       allowArrowFunctions: true
     }],
+    'react/prop-types': 0,
     'react/prefer-stateless-function': 0,
-    'react/no-access-state-in-setstate': 0
+    'react/no-access-state-in-setstate': 0,
+    'react/no-did-update-set-state': 0,
+    'max-len': 0,
+    'no-console': 0
   }
 };
