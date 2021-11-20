@@ -8,6 +8,7 @@ package-lock.json
 /output
 /releases
 .idea
+.yarn*
 /.vscode
 electron-builder.yml
 .DS_Store
