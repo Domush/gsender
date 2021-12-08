@@ -33,6 +33,7 @@ const inputStyle = {
 const ProbeDiameter = ({ actions, state, probeCommand }) => {
     const { setToolDiameter } = actions;
     let { availableTools, units, toolDiameter } = state;
+    const tools = [...availableTools];
 
     if (toolDiameter === 'Tip' || toolDiameter === 'Auto') {
         units = '';
@@ -52,7 +53,7 @@ const ProbeDiameter = ({ actions, state, probeCommand }) => {
         );
     }
 
-    options.push(...convertAvailableTools(availableTools, units));
+    options.push(...convertAvailableTools(tools, units));
 
     return (
         <div className={styles.probeDiameterWrapper}>

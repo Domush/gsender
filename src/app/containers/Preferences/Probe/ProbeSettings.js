@@ -25,7 +25,7 @@ const ProbeSettings = ({ state, probeActions, values, type }) => {
                                 value={values.fastFeedrate}
                                 onChange={probeActions.changeFastFeedrate}
                                 additionalProps={{ type: 'number', id: 'fastFeedrate' }}
-                                units={units}
+                                units={`${units}/min`}
                             />
                         </Tooltip>
                         <Tooltip content="Specify starting point between Touch Plate and Tool" location="default">
@@ -34,7 +34,7 @@ const ProbeSettings = ({ state, probeActions, values, type }) => {
                                 value={values.normalFeedrate}
                                 onChange={probeActions.changeNormalFeedrate}
                                 additionalProps={{ type: 'number', id: 'normalFeedrate' }}
-                                units={units}
+                                units={`${units}/min`}
                             />
                         </Tooltip>
                         <Tooltip content="Specify how high the head lifts while probing" location="default">
@@ -43,7 +43,7 @@ const ProbeSettings = ({ state, probeActions, values, type }) => {
                                 value={values.retractionDistance}
                                 onChange={probeActions.changeRetractionDistance}
                                 additionalProps={{ type: 'number', id: 'retraction' }}
-                                units={units}
+                                units={`${units}/min`}
                             />
                         </Tooltip>
                     </>

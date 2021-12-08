@@ -1,6 +1,6 @@
 {
   "name": "gSender",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "productName": "gSender",
   "description": "CNC Milling Controller",
   "author": {
@@ -29,7 +29,7 @@
     "deep-keys": "~0.5.0",
     "electron-log": "^4.3.5",
     "electron-store": "~3.2.0",
-    "electron-updater": "^4.3.8",
+    "electron-updater": "4.3.8",
     "ensure-array": "~1.0.0",
     "errorhandler": "~1.5.0",
     "escodegen": "~1.11.1",

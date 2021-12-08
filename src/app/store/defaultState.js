@@ -19,8 +19,10 @@ import {
     MODAL_PREFERENCES,
     MODAL_FIRMWARE,
     MODAL_SURFACING,
-    MODAL_CALIBRATE
+    MODAL_CALIBRATE,
+    MODAL_HELP
 } from 'app/containers/NavSidebar/constants';
+
 import { SPEED_NORMAL, SPEED_PRECISE, SPEED_RAPID } from '../widgets/JogControl/constants';
 
 const AXIS_X = 'x';
@@ -907,7 +909,7 @@ const defaultState = {
         },
 
 
-        { // Confirm Probe                               TODO
+        { // Confirm Probe
             id: 49,
             title: 'Confirm Probe',
             keys: '',
@@ -916,7 +918,7 @@ const defaultState = {
             isActive: true,
             category: PROBING_CATEGORY,
         },
-        { // Start Probing                               TODO
+        { // Start Probing
             id: 50,
             title: 'Start Probing',
             keys: '',
@@ -1001,7 +1003,7 @@ const defaultState = {
             isActive: true,
             category: GENERAL_CATEGORY,
         },
-        { // Close Dialog                                TODO
+        { // Close Dialog
             id: 59,
             title: 'Close Dialog',
             keys: 'esc',
@@ -1010,7 +1012,7 @@ const defaultState = {
             isActive: true,
             category: GENERAL_CATEGORY,
         },
-        { // Toggle Tab Widgets                          TODO
+        { // Toggle Tab Widgets
             id: 60,
             title: 'Toggle Tab Widgets',
             keys: 'tab',
@@ -1108,7 +1110,7 @@ const defaultState = {
             title: 'Help',
             keys: 'f6',
             cmd: 'OPEN_TOOLBAR',
-            payload: { shouldOpenHelpPage: true },
+            payload: { toolbar: MODAL_HELP },
             preventDefault: false,
             isActive: true,
             category: TOOLBAR_CATEGORY,
