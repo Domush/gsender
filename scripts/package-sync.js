@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint max-len: 0 */
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
