@@ -34,34 +34,37 @@ import ZProbe from './assets/Block-Z.gif';
 import AutoZProbe from './assets/AutoZero-Z.gif';
 import AutoXYZProbe from './assets/AutoZero-Rem.gif';
 
+const ProbeImage = ({
+  probeCommand,
+  touchplateType = TOUCHPLATE_TYPE_STANDARD,
+  visible = true
+}) => {
+  const getProbeImage = () => {
+    const { id } = probeCommand;
+    if (touchplateType === TOUCHPLATE_TYPE_AUTOZERO) {
+      if (id === 'Z Touch') {
+        return AutoZProbe;
+      }
+      return AutoXYZProbe;
+    }
+    if (id === 'X Touch') {
+      return XProbe;
+    } else if (id === 'Y Touch') {
+      return YProbe;
+    } else if (id === 'XY Touch') {
+      return XYProbe;
+    } else if (id === 'Z Touch') {
+      return ZProbe;
+    }
+    return XYZProbe;
+  };
+  const imgSrc = getProbeImage();
 
-const ProbeImage = ({ probeCommand, touchplateType = TOUCHPLATE_TYPE_STANDARD, visible = true }) => {
-    const getProbeImage = () => {
-        const { id } = probeCommand;
-        if (touchplateType === TOUCHPLATE_TYPE_AUTOZERO) {
-            if (id === 'Z Touch') {
-                return AutoZProbe;
-            }
-            return AutoXYZProbe;
-        }
-        if (id === 'X Touch') {
-            return XProbe;
-        } else if (id === 'Y Touch') {
-            return YProbe;
-        } else if (id === 'XY Touch') {
-            return XYProbe;
-        } else if (id === 'Z Touch') {
-            return ZProbe;
-        }
-        return XYZProbe;
-    };
-    const imgSrc = getProbeImage();
-
-    return (
-        <div className={styles.imgWrap}>
-            <Image src={imgSrc} className={cx({ [styles.imgHidden]: !visible })} />
-        </div>
-    );
+  return (
+    <div className={styles.imgWrap}>
+      <Image src={imgSrc} className={cx({ [styles.imgHidden]: !visible })} />
+    </div>
+  );
 };
 
 export default ProbeImage;

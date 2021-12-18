@@ -34,20 +34,19 @@ import styles from './Overrides.styl';
  *
  */
 const Overrides = ({ state }) => {
-    return (
-        <div className={styles.wrapper}>
+  return (
+    <div className={styles.wrapper}>
+      <ProgressArea state={state} />
 
-            <ProgressArea state={state} />
+      <div className={styles.seperator} />
 
-            <div className={styles.seperator} />
-
-            <SettingsArea state={state} />
-        </div>
-    );
+      <SettingsArea state={state} />
+    </div>
+  );
 };
 
 Overrides.propTypes = {
-    state: PropTypes.object,
+  state: PropTypes.object
 };
 
 export default Overrides;

@@ -35,16 +35,16 @@ import * as users from './api.users';
 import * as files from './api.file';
 
 export {
-    version,
-    state,
-    gcode,
-    controllers,
-    watch,
-    commands,
-    events,
-    machines,
-    macros,
-    mdi,
-    users,
-    files
+  version,
+  state,
+  gcode,
+  controllers,
+  watch,
+  commands,
+  events,
+  machines,
+  macros,
+  mdi,
+  users,
+  files
 };

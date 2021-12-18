@@ -30,7 +30,10 @@ module.exports = {
       path.resolve(__dirname, 'src/app/polyfill/index.js'),
       'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true'
     ],
-    app: [path.resolve(__dirname, 'src/app/index.jsx'), 'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true']
+    app: [
+      path.resolve(__dirname, 'src/app/index.jsx'),
+      'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true'
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'output/app'),

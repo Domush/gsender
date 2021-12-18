@@ -74,7 +74,9 @@ module.exports = {
 
     if (count > 0) {
       console.log(
-        `[i18next-scanner] transform: count=${chalk.cyan(count)}, file=${chalk.yellow(JSON.stringify(file.relative))}`
+        `[i18next-scanner] transform: count=${chalk.cyan(count)}, file=${chalk.yellow(
+          JSON.stringify(file.relative)
+        )}`
       );
     }
 

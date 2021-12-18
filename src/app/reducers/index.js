@@ -28,10 +28,10 @@ import file from './fileInfoReducers';
 import visualizer from './visualizerReducers';
 
 const consolidatedReducer = combineReducers({
-    controller,
-    connection,
-    file,
-    visualizer
+  controller,
+  connection,
+  file,
+  visualizer
 });
 
 export default consolidatedReducer;

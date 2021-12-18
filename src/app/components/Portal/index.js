@@ -20,5 +20,5 @@
  * of Sienci Labs Inc. in Waterloo, Ontario, Canada.
  *
  */
-
-export default from '@trendmicro/react-portal';
+import Portal from '@trendmicro/react-portal';
+export default Portal;

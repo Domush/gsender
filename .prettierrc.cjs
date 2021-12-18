@@ -1,5 +1,5 @@
 module.exports = {
-  printWidth: 120, // The code width is recommended not to exceed 100 characters
+  printWidth: 100, // The code width is recommended not to exceed 100 characters
   tabWidth: 2, // tab indented 2 spaces
   useTabs: false,
   semi: true, // semicolon at the end
@@ -10,5 +10,5 @@ module.exports = {
   htmlWhitespaceSensitivity: 'css', // html space sensitivity
   endOfLine: 'lf',
   proseWrap: 'never',
-  quoteProps: 'as-needed',
+  quoteProps: 'as-needed'
 };
