@@ -42,15 +42,15 @@
 
 @keyframes glowEffect {
     from  {
-        primary = #1f2937;
-        color: primary;
-        border-bottom: 2px solid primary;
+        $primary = #1f2937;
+        color: $primary;
+        border-bottom: 2px solid $primary;
     }
 
     to {
-        secondary = #3e85c7;
-        color: secondary;
-        border-bottom: 2px solid secondary;
+        $secondary = #3e85c7;
+        color: $secondary;
+        border-bottom: 2px solid $secondary;
     }
 }
 
@@ -102,17 +102,17 @@ info-window() {
 }
 
 .info-window-area {
-    info-window()
+    info-window();
 }
 
 .info-window-area-error {
-    info-window()
+    info-window();
     color: red;
     border: 2px solid red;
 }
 
 .info-window-area-success {
-    info-window()
+    info-window();
     color: #3e85c7;
     border: 2px solid #3e85c7;
 }
@@ -197,7 +197,7 @@ info-window() {
         text-align: center;
         padding: 5px;
         border-radius: 25px;
-        border: border;
+        border: $border;
     }
 
     categoryMixin();

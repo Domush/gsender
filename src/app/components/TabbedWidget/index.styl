@@ -21,22 +21,22 @@
  *
  */
 
-PRIMARY_COLOR = #3e85c7
-SECONDARY_COLOR = #6B7280
-PRIMARY_LIGHT = #78aad8;
+$PRIMARY_COLOR = #3e85c7;
+$SECONDARY_COLOR = #6B7280;
+$PRIMARY_LIGHT = #78aad8;
 
 .tab {
-  color: SECONDARY_COLOR;
+  color: $SECONDARY_COLOR;
   flex-direction: row;
   font-size: 1.15rem;
   background: none;
   border: none;
   padding: 0 0.6rem;
   border-bottom: solid 4px #D1D5DB;
-  transition: ease-in-out 250ms
+  transition: ease-in-out 250ms;
   min-width: 15%;
   &:hover {
-    color :#4B5563;
+    color: #4B5563;
   }
   &:focus{
     outline: none;
@@ -49,12 +49,12 @@ PRIMARY_LIGHT = #78aad8;
 }
 
 .tab-active {
-  color: PRIMARY_COLOR;
-  border-bottom solid 4px PRIMARY_COLOR;
+  color: $PRIMARY_COLOR;
+  border-bottom: solid 4px $PRIMARY_COLOR;
   font-weight: bold;
   &:hover {
-    color: PRIMARY_LIGHT;
-    border-bottom-color: PRIMARY_LIGHT;
+    color: $PRIMARY_LIGHT;
+    border-bottom-color: $PRIMARY_LIGHT;
   }
 }
 

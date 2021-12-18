@@ -24,7 +24,7 @@
 @import './theme';
 @import '../../styles/variables';
 
-PRIMARY_COLOR = #3e85c7;
+$PRIMARY_COLOR = #3e85c7;
 
 .widget {
     height: 100%;
@@ -102,7 +102,7 @@ PRIMARY_COLOR = #3e85c7;
         margin-top: 0;
         margin-bottom: 0;
         padding: 0 10px;
-        color: PRIMARY_COLOR;
+        color: $PRIMARY_COLOR;
         // Truncate string with ellipsis
         text-overflow: ellipsis;
         overflow: hidden;
@@ -127,8 +127,8 @@ PRIMARY_COLOR = #3e85c7;
 
     .widget-content {
         position: relative;
-        height: calc(100% - 1.9rem);
-        padding: 15px;
+        // height: calc(100% - 1.9rem);
+        // padding: 15px;
         min-width: 330px;
         background-color: #e5e7eb;
     }

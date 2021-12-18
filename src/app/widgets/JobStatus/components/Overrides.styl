@@ -27,7 +27,7 @@
     display: flex;
     flex-direction: row;
     justify-content center;
-    align-items center;
+    align-items: center;
     gap: 1rem;
     width: 100%;
     height: 100%;
@@ -56,8 +56,8 @@
 }
 
 .settings-area {
-    primary = #D1D5DB;
-    secondary = #333;
+    $primary = #D1D5DB;
+    $secondary = #333;
 
     display: flex;
     flex-direction: column;
@@ -66,7 +66,7 @@
     
     label {
         margin-bottom: 0;
-        background-color: primary;
+        background-color: $primary;
         padding: 3px 3px;
         color: #3E85C8;
         border: 1px solid #9CA3AF;
@@ -76,9 +76,9 @@
     }
 
     button {
-        background-color: primary;
+        background-color: $primary;
         border: 1px solid #9CA3AF;
-        color: secondary;
+        color: $secondary;
         min-height: 32px;
 
         &:disabled {
@@ -135,10 +135,10 @@
     --tw-border-opacity: 1;
     --tw-bg-opacity: 0.6;
     color: rgba(17, 24, 39, 1);
-    text-align center;
+    text-align: center;
     padding: 0.25rem;
     margin: 0;
-    font-weight bold;
+    font-weight: bold;
     border: solid 1px rgba(156, 163, 175, 1);
     background-color: rgba(209, 213, 219, 0.6);
 
