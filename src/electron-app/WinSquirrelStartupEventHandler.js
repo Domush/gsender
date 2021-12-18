@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint import/no-unresolved: 0 */
 import path from 'path';
 import { spawn } from 'child_process';
 import { app } from 'electron';

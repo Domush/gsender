@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint react/jsx-no-bind: 0 */
 import chainedFunction from 'chained-function';
 import moment from 'moment';
 import PropTypes from 'prop-types';

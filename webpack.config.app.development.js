@@ -9,8 +9,8 @@ const nib = require('nib');
 const webpack = require('webpack');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
-const babelConfig = require('./babel.config');
-const buildConfig = require('./build.config');
+const babelConfig = require('./babel.config.js');
+const buildConfig = require('./build.config.js');
 const pkg = require('./package.json');
 
 dotenv.config();
@@ -40,7 +40,8 @@ module.exports = {
     chunkFilename: `[name].[hash].bundle.js?_=${timestamp}`,
     filename: `[name].[hash].bundle.js?_=${timestamp}`,
     pathinfo: true,
-    publicPath: publicPath
+    publicPath: publicPath,
+    hashFunction: 'sha256'
   },
   module: {
     rules: [
@@ -179,9 +180,7 @@ module.exports = {
       new RegExp('^./(' + without(buildConfig.languages, 'en').join('|') + ')$')
     ),
     // Generates a manifest.json file in your root output directory with a mapping of all source file names to their corresponding output file.
-    new ManifestPlugin({
-      fileName: 'manifest.json'
-    }),
+    new ManifestPlugin(),
     new MiniCssExtractPlugin({
       filename: `[name].css?_=${timestamp}`,
       chunkFilename: `[id].css?_=${timestamp}`
@@ -194,8 +193,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.hbs',
-      template: path.resolve(__dirname, 'index.hbs'),
-      chunksSortMode: 'dependency' // Sort chunks by dependency
+      template: path.resolve(__dirname, 'index.hbs')
     })
   ],
   resolve: {

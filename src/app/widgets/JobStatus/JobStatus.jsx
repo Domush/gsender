@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint-disable no-restricted-globals */
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import get from 'lodash/get';

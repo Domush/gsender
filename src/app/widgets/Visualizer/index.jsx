@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint-disable consistent-return */
 import includes from 'lodash/includes';
 import { connect } from 'react-redux';
 import { get } from 'lodash';

@@ -41,12 +41,6 @@ const webpackDevServer = (app) => {
   // webpack-dev-middleware handle the files in memory.
   app.use(
     webpackDevMiddleware(compiler, {
-      lazy: false,
-      // https://webpack.github.io/docs/node.js-api.html#compiler
-      watchOptions: {
-        poll: true, // use polling instead of native watchers
-        ignored: /node_modules/
-      },
       publicPath: webpackConfig.output.publicPath,
       stats: {
         colors: true

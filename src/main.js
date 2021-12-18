@@ -21,7 +21,7 @@
  *
  */
 
-import '@babel/polyfill';
+import regeneratorRuntime from 'regenerator-runtime';
 import { app, ipcMain, dialog, powerSaveBlocker, powerMonitor } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import Store from 'electron-store';

@@ -21,9 +21,6 @@
  *
  */
 
-/* eslint-disable brace-style */
-/* eslint-disable indent */
-/* eslint-disable react/jsx-closing-bracket-location */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ToggleSwitch from 'app/components/ToggleSwitch';

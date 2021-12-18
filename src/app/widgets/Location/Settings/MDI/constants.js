@@ -22,9 +22,9 @@
  */
 
 import constants from 'namespace-constants';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-export const { MODAL_CREATE_RECORD, MODAL_UPDATE_RECORD } = constants(uuid.v4(), [
+export const { MODAL_CREATE_RECORD, MODAL_UPDATE_RECORD } = constants(uuidv4(), [
   'MODAL_CREATE_RECORD',
   'MODAL_UPDATE_RECORD'
 ]);

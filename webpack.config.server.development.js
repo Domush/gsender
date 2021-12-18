@@ -26,7 +26,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'output/server'),
     filename: '[name].js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
+    hashFunction: 'sha256'
   },
   plugins: [
     new webpack.DefinePlugin({

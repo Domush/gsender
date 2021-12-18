@@ -21,9 +21,6 @@
  *
  */
 
-/* eslint-disable no-return-assign */
-/* eslint-disable no-new-wrappers */
-
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -444,7 +441,7 @@ class Firmware extends PureComponent {
     } else if (name === 'LongMill') {
       message = `Are you sure you want to restore your ${name} ${type} back to its default state??`;
     } else {
-      message = `We dont have the default settings for your ${name} ${type}. Would you 
+      message = `We dont have the default settings for your ${name} ${type}. Would you
             like to Restore your machine to the Grbl defaults?`;
     }
     return message;

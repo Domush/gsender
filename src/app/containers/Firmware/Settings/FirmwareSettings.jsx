@@ -21,9 +21,6 @@
  *
  */
 
-/* eslint-disable no-new-wrappers */
-/* eslint-disable indent */
-/* eslint-disable import/no-useless-path-segments */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';

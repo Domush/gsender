@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Toaster, TOASTER_SUCCESS } from 'app/lib/toaster/ToasterLib';

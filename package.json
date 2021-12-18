@@ -28,7 +28,7 @@
   "scripts": {
     "build": "npm run build-prod",
     "build-dev": "npm run build-dev-server && npm run build-dev-app && npm run postbuild-dev",
-    "build-dev-app": "npm run build-i18n",
+    "build-dev-app": "npm run build-i18n-app",
     "build-dev-server": "cross-env NODE_ENV=development webpack-cli --progress --config webpack.config.server.development.js && npm run build-i18n-server",
     "build-i18n": "npm run build-i18n-server && npm run build-i18n-app",
     "build-i18n-app": "i18next-scanner --config i18next-scanner.config.app.js \"src/app/**/*.{html,js,jsx}\" \"!src/app/i18n/**\" \"!**/node_modules/**\"",
@@ -246,7 +246,7 @@
     "universal-logger-browser": "~1.0.2",
     "use-stay-awake": "^0.1.7",
     "utf-8-validate": "^5.0.7",
-    "uuid": "^8",
+    "uuid": "^8.3.2",
     "watch": "~1.0.2",
     "webappengine": "~1.2.0",
     "winston": "^3.3",
@@ -321,10 +321,10 @@
     "url-loader": "~1.1.2",
     "webpack": "^4.44.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-middleware": "^5.2.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-hot-middleware": "^2.25",
-    "webpack-manifest-plugin": "^3.0",
+    "webpack-manifest-plugin": "^2.0",
     "webpack-node-externals": "^1.7.2",
     "write-file-webpack-plugin": "^4.5.0"
   },
@@ -341,6 +341,23 @@
       "node": true
     },
     "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "allowImportExportEverywhere": false,
+      "requireConfigFile": false,
+      "ecmaFeatures": {
+        "globalReturn": false
+      },
+      "babelOptions": {
+        "extends": "@trendmicro/babel-config",
+        "presets": [
+          "@babel/preset-env",
+          "@babel/preset-react"
+        ],
+        "plugins": [
+          "lodash"
+        ]
+      }
+    },
     "extends": [
       "plugin:prettier/recommended"
     ],

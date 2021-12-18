@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint import/no-dynamic-require: 0 */
 import chainedFunction from 'chained-function';
 import moment from 'moment';
 import pubsub from 'pubsub-js';

@@ -24,7 +24,7 @@
 import find from 'lodash/find';
 import castArray from 'lodash/castArray';
 import isPlainObject from 'lodash/isPlainObject';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import settings from '../config/settings';
 import logger from '../lib/logger';
 import config from '../services/configstore';
@@ -46,7 +46,7 @@ const getSanitizedRecords = () => {
     const record = records[i];
 
     if (!record.id) {
-      record.id = uuid.v4();
+      record.id = uuidv4();
       shouldUpdate = true;
     }
 
@@ -130,7 +130,7 @@ export const create = (req, res) => {
   try {
     const records = getSanitizedRecords();
     const record = {
-      id: uuid.v4(),
+      id: uuidv4(),
       mtime: new Date().getTime(),
       enabled: !!enabled,
       event: event,

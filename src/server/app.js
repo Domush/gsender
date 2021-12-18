@@ -121,7 +121,7 @@ const appMain = () => {
   app.use(async (req, res, next) => {
     try {
       // IP Address Access Control
-      const ipaddr = req.ip || req.connection.remoteAddress;
+      const ipaddr = req.ip || req.socket.remoteAddress;
       await authorizeIPAddress(ipaddr);
     } catch (err) {
       log.warn(err);

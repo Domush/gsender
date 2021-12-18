@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 /*
  * Copyright (C) 2021 Sienci Labs Inc.
  *

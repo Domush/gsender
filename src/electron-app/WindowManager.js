@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint import/no-unresolved: 0 */
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
 

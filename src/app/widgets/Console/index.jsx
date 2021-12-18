@@ -25,7 +25,7 @@ import cx from 'classnames';
 import color from 'cli-color';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import Widget from 'app/components/Widget';
 import controller from 'app/lib/controller';
 import i18n from 'app/lib/i18n';
@@ -47,7 +47,7 @@ class ConsoleWidget extends PureComponent {
     active: PropTypes.bool
   };
 
-  senderId = uuid.v4();
+  senderId = uuidv4();
 
   // Public methods
   collapse = () => {

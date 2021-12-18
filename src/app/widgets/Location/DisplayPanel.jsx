@@ -21,9 +21,6 @@
  *
  */
 
-/* eslint-disable dot-notation */
-/* eslint-disable jsx-a11y/heading-has-content */
-
 import ensureArray from 'ensure-array';
 import includes from 'lodash/includes';
 import MachinePositionInput from 'app/widgets/Location/components/MachinePositionInput';

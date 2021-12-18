@@ -21,7 +21,6 @@
  *
  */
 
-/* eslint-disable react/self-closing-comp */
 import ensureArray from 'ensure-array';
 import frac from 'frac';
 import _uniqueId from 'lodash/uniqueId';

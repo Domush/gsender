@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import React from 'react';
 
 import store from 'app/store';

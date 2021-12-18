@@ -99,7 +99,7 @@ export default {
     // https://github.com/andrewrk/node-multiparty/
     multiparty: {
       // Limits the amount of memory a field (not a file) can allocate in bytes. If this value is exceeded, an error event is emitted. The default size is 2MB.
-      maxFieldsSize: 50 * 1024 * 1024, // 20MB
+      maxFieldsSize: 50 * 1024 * 1024, // 50MB
 
       // Limits the number of fields that will be parsed before emitting an error event. A file counts as a field in this case. Defaults to 1000.
       maxFields: 1000
@@ -113,7 +113,7 @@ export default {
     // https://github.com/expressjs/compression
     compression: {
       // response is only compressed if the byte size is at or above this threshold.
-      threshold: 512
+      threshold: 4096
     },
     // https://github.com/expressjs/session
     session: {
@@ -128,7 +128,7 @@ export default {
     lowerCaseLng: true,
 
     // logs out more info (console)
-    debug: false,
+    debug: true,
 
     // language to lookup key if not found on set language
     fallbackLng: 'en',
@@ -185,7 +185,7 @@ export default {
       addPath: path.resolve(__dirname, '..', 'i18n', '{{lng}}', '{{ns}}.savedMissing.json'),
 
       // jsonIndent to use when storing json files
-      jsonIndent: 4
+      jsonIndent: 2
     }
   }
 };

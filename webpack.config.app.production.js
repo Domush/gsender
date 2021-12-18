@@ -228,8 +228,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.hbs',
-      template: path.resolve(__dirname, 'index.hbs'),
-      chunksSortMode: 'dependency' // Sort chunks by dependency
+      template: path.resolve(__dirname, 'index.hbs')
     })
   ],
   resolve: {
