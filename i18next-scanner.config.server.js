@@ -25,11 +25,15 @@ module.exports = {
       'resource' // default
     ],
     defaultNs: 'resource',
-    defaultValue: '__L10N__', // to indicate that a default value has not been defined for the key
+    defaultValue: (lng, ns, key) => {
+      if (lng === 'en') {
+        return key; // Use key as value for base language
+      }
+    },
     resource: {
       loadPath: 'src/server/i18n/{{lng}}/{{ns}}.json',
       savePath: 'src/server/i18n/{{lng}}/{{ns}}.json', // or 'src/server/i18n/${lng}/${ns}.saveAll.json'
-      jsonIndent: 4
+      jsonIndent: 2
     },
     nsSeparator: ':', // namespace separator
     keySeparator: '.', // key separator

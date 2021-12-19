@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import XHR from 'i18next-xhr-backend';
+import HttpApi from 'i18next-http-backend';
 import { TRACE, DEBUG, INFO, WARN, ERROR } from 'universal-logger';
 import { Provider as ReduxProvider } from 'react-redux';
 import { Provider as GridSystemProvider } from 'app/components/GridSystem';
@@ -76,7 +76,7 @@ series([
   () =>
     promisify((next) => {
       i18next
-        .use(XHR)
+        .use(HttpApi)
         .use(LanguageDetector)
         .init(settings.i18next, (t) => {
           next();

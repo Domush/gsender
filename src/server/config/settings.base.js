@@ -112,7 +112,6 @@ export default {
 
     // string or array of namespaces
     ns: [
-      'config',
       'resource' // default
     ],
 
