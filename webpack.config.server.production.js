@@ -22,7 +22,7 @@ const publicPath = ((payload) => {
   const algorithm = 'sha1';
   const buf = String(payload);
   const hash = crypto.createHash(algorithm).update(buf).digest('hex');
-  return '/' + hash.substr(0, 8) + '/'; // 8 digits
+  return '/' + hash.substring(0, 8) + '/'; // 8 digits
 })(payload);
 const buildVersion = pkg.version;
 
@@ -46,7 +46,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'global.NODE_ENV': JSON.stringify('production'),
       'global.PUBLIC_PATH': JSON.stringify(publicPath),
-      'global.BUILD_VERSION': JSON.stringify(buildVersion)
+      'global.BUILD_VERSION': JSON.stringify(buildVersion),
+      'global.NODE_OPTIONS': JSON.stringify('--openssl-legacy-provider')
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',

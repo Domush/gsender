@@ -27,16 +27,16 @@
   },
   "scripts": {
     "build": "npm run build-prod",
-    "build-dev": "npm run build-dev-server && npm run build-dev-app && npm run postbuild-dev",
-    "build-dev-app": "npm run build-i18n-app",
-    "build-dev-server": "cross-env NODE_ENV=development webpack-cli --progress --config webpack.config.server.development.js && npm run build-i18n-server",
+    "build-dev": "npm run build-dev-server && npm run build-dev-app",
+    "build-dev-app": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider NODE_OPTIONS=--trace-warnings webpack-cli --progress --config webpack.config.app.development.js && npm run build-i18n-app",
+    "build-dev-server": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider NODE_OPTIONS=--trace-warnings webpack-cli --progress --config webpack.config.server.development.js && npm run build-i18n-server",
     "build-i18n": "npm run build-i18n-server && npm run build-i18n-app",
     "build-i18n-app": "i18next-scanner --config i18next-scanner.config.app.js \"src/app/**/*.{html,js,jsx}\" \"!src/app/i18n/**\" \"!**/node_modules/**\"",
     "build-i18n-server": "i18next-scanner --config i18next-scanner.config.server.js \"src/server/**/*.{html,js,jsx}\" \"!src/server/i18n/**\" \"!**/node_modules/**\"",
     "build-latest": "npm run build-prod",
     "build-prod": "npm run build-prod-server && npm run build-prod-app && npm run postbuild-prod",
-    "build-prod-app": "cross-env NODE_ENV=production webpack-cli --config webpack.config.app.production.js && npm run build-i18n-app",
-    "build-prod-server": "cross-env NODE_ENV=production webpack-cli --config webpack.config.server.production.js && npm run build-i18n-server",
+    "build-prod-app": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider webpack-cli --config webpack.config.app.production.js && npm run build-i18n-app",
+    "build-prod-server": "cross-env NODE_ENV=production webpack-cli NODE_OPTIONS=--openssl-legacy-provider --config webpack.config.server.production.js && npm run build-i18n-server",
     "build:linux-arm64": "bash -c 'scripts/electron-builder.sh --linux --arm64'",
     "build:linux-armv7l": "bash -c 'scripts/electron-builder.sh --linux --armv7l'",
     "build:linux-ia32": "bash -c 'scripts/electron-builder.sh --linux --ia32'",
@@ -67,13 +67,13 @@
     "prepare": "del dist output && npm run eslint && npm run stylint",
     "prettier": "prettier --write .",
     "dev": "npm run build-dev && npm run start-dev",
-    "prod": "npm run build-prod && cross-env NODE_ENV=production ./bin/gsender",
-    "start": "cross-env NODE_ENV=production ./bin/gsender",
-    "start-dev": "cross-env NODE_ENV=development ./bin/gsender -vv -p 8000",
+    "prod": "npm run build-prod && npm run start",
+    "start": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider ./bin/gsender",
+    "start-dev": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider NODE_OPTIONS=--trace-warnings ./bin/gsender -vv -p 8000",
     "start-electron": "electron ./dist/gsender/main",
     "stylint": "stylint src/app",
     "test": "tap test/*.js --no-timeout --node-arg=--require --node-arg=@babel/register --node-arg=--require --node-arg=@babel/polyfill",
-    "watch-dev": "cross-env NODE_ENV=development webpack-cli --watch --config webpack.config.server.development.js"
+    "watch-dev": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider webpack-cli --watch --config webpack.config.server.development.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -334,6 +334,16 @@
   "collective": {
     "type": "opencollective",
     "url": ""
+  },
+  "babel": {
+    "extends": "@trendmicro/babel-config",
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "lodash"
+    ]
   },
   "eslintConfig": {
     "env": {

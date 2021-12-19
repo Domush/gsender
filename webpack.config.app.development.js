@@ -166,7 +166,8 @@ module.exports = {
         NODE_ENV: JSON.stringify('development'),
         BUILD_VERSION: JSON.stringify(buildVersion),
         LANGUAGES: JSON.stringify(buildConfig.languages),
-        TRACKING_ID: JSON.stringify(buildConfig.analytics.trackingId)
+        TRACKING_ID: JSON.stringify(buildConfig.analytics.trackingId),
+        NODE_OPTIONS: JSON.stringify('--openssl-legacy-provider')
       }
     }),
     new webpack.LoaderOptionsPlugin({
