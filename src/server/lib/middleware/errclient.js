@@ -17,11 +17,11 @@
 const errclient = (options) => {
   options = options || {};
 
-  let error = options.error || '';
+  let error = options.error || 'Unspecified issue. Best of luck fixing it!';
 
   return (err, req, res, next) => {
     if (req.xhr) {
-      res.send(500, {
+      res.status(500).send({
         error: error
       });
       return;

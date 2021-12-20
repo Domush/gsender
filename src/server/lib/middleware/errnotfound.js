@@ -19,7 +19,7 @@ const errnotfound = (options) => {
   options = options || {};
 
   let view = options.view || '404',
-    error = options.error || '';
+    error = options.error || `Can't find what you're looking for. Best of luck finding it!`;
 
   return (req, res, next) => {
     res.status(404);

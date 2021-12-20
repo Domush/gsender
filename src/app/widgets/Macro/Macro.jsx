@@ -3,6 +3,7 @@ import includes from 'lodash/includes';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
+import i18n from 'app/lib/i18n';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TooltipCustom from 'app/components/TooltipCustom/ToolTip';
 import { Confirm } from 'app/components/ConfirmationDialog/ConfirmationDialogLib';
@@ -48,7 +49,7 @@ class Macro extends PureComponent {
 
   onDeleteClick = ({ name, id }) => {
     Confirm({
-      title: 'Delete Macro',
+      title: i18n._('Delete Macro'),
       content: (
         <>
           <p>Are you sure you want to delete this macro?</p>
@@ -57,7 +58,7 @@ class Macro extends PureComponent {
           </p>
         </>
       ),
-      confirmLabel: 'Delete',
+      confirmLabel: i18n._('Delete'),
       onConfirm: () => this.handleDeleteMacro(id)
     });
   };

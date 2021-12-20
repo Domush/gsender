@@ -13,9 +13,7 @@ const AboutContainer = ({ version }) => {
           className={styles.aboutProductName}
         >{`${settings.productName} ${version.current}`}</div>
         <div className={styles.aboutProductDescription}>
-          {i18n._(
-            'A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG'
-          )}
+          {i18n._('A web-based CNC interface for Grbl or Marlin controllers')}
         </div>
       </div>
     </div>

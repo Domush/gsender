@@ -16,7 +16,7 @@ module.exports = {
     removeUnusedKeys: true,
     sort: false,
     func: {
-      list: [], // Use an empty array to bypass the default list: i18n.t, i18next.t
+      list: ['i18n.t', 't'],
       extensions: ['.js', '.jsx']
     },
     trans: {
@@ -31,6 +31,7 @@ module.exports = {
     lngs: languages,
     ns: [
       'gcode',
+      'controller',
       'resource' // default
     ],
     defaultNs: 'resource',

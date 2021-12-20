@@ -178,7 +178,6 @@
   "Username": "",
   "Password": "",
   "Sign In": "",
-  "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG": "",
   "Checking for updates...": "",
   "A new version of {{name}} is available": "",
   "Version {{version}}": "",
@@ -392,5 +391,7 @@
   "Test Run": "",
   "Pause": "",
   "Pause Job": "",
-  "Stop Job": ""
+  "Stop Job": "",
+  "A web-based CNC interface for Grbl or Marlin controllers": "",
+  "Delete Macro": ""
 }

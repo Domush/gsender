@@ -22,7 +22,6 @@
   "Password": "",
   "Sign In": "",
   "Units": "",
-  "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG": "",
   "Checking for updates...": "",
   "A new version of {{name}} is available": "",
   "Version {{version}}": "",
@@ -392,5 +391,7 @@
   "Click \"Resume\" to continue execution.": "",
   "Server Connection Lost": "",
   "It looks like the server connection has been lost - attempt to reconnect?": "",
-  "Attempt Reconnect": ""
+  "Attempt Reconnect": "",
+  "A web-based CNC interface for Grbl or Marlin controllers": "",
+  "Delete Macro": ""
 }

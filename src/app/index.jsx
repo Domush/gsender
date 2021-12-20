@@ -7,8 +7,8 @@ import reduxStore from 'app/store/redux';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import HttpApi from 'i18next-http-backend';
+import i18nLanguageDetector from 'i18next-browser-languagedetector';
+import i18nBackend from 'i18next-http-backend';
 import { TRACE, DEBUG, INFO, WARN, ERROR } from 'universal-logger';
 import { Provider as ReduxProvider } from 'react-redux';
 import { Provider as GridSystemProvider } from 'app/components/GridSystem';
@@ -76,8 +76,14 @@ series([
   () =>
     promisify((next) => {
       i18next
-        .use(HttpApi)
-        .use(LanguageDetector)
+        // load translation using http -> see /public/locales
+        // learn more: https://github.com/i18next/i18next-http-backend
+        .use(i18nBackend)
+        // detect user language
+        // learn more: https://github.com/i18next/i18next-browser-languageDetector
+        .use(i18nLanguageDetector)
+        // init i18next
+        // for all options read: https://www.i18next.com/overview/configuration-options
         .init(settings.i18next, (t) => {
           next();
         });

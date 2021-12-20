@@ -13,7 +13,12 @@ import expressJwt from 'express-jwt';
 import session from 'express-session';
 import 'hogan.js';
 import i18next from 'i18next';
-import i18nextBackend from 'i18next-node-fs-backend';
+import i18nBackend from 'i18next-fs-backend';
+import {
+  LanguageDetector as i18nLanguageDetector,
+  handle as i18nHandle
+} from 'i18next-http-middleware';
+import { initReactI18next } from 'react-i18next';
 import jwt from 'jsonwebtoken';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
@@ -23,10 +28,6 @@ import sessionFileStore from 'session-file-store';
 import _get from 'lodash/get';
 import _noop from 'lodash/noop';
 import rimraf from 'rimraf';
-import {
-  LanguageDetector as i18nextLanguageDetector,
-  handle as i18nextHandle
-} from 'i18next-express-middleware';
 import urljoin from './lib/urljoin';
 import logger from './lib/logger';
 import settings from './config/settings';
@@ -91,8 +92,20 @@ const appMain = () => {
     log.debug('app.settings: %j', app.settings);
   }
 
+  i18next
+    // load translation using http -> see /public/locales
+    // learn more: https://github.com/i18next/i18next-http-backend
+    .use(i18nBackend)
+    // detect user language
+    // learn more: https://github.com/i18next/i18next-browser-languageDetector
+    .use(i18nLanguageDetector)
+    // pass the i18n instance to react-i18next.
+    .use(initReactI18next)
+    // init i18next
+    // for all options read: https://www.i18next.com/overview/configuration-options
+    .init(settings.i18next);
   // Setup i18n (i18next)
-  i18next.use(i18nextBackend).use(i18nextLanguageDetector).init(settings.i18next);
+  // i18next.use(i18nextBackend).use(i18nextLanguageDetector).init(settings.i18next);
 
   app.use(async (req, res, next) => {
     try {
@@ -199,7 +212,7 @@ const appMain = () => {
     });
   });
 
-  app.use(i18nextHandle(i18next, {}));
+  app.use(i18nHandle(i18next, {}));
 
   {
     // Secure API Access

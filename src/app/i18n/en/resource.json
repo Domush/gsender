@@ -22,7 +22,6 @@
   "Password": "Password",
   "Sign In": "Sign In",
   "Units": "Units",
-  "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG": "A web-based interface for CNC milling controller running Grbl, Smoothieware, or TinyG",
   "Checking for updates...": "Checking for updates...",
   "A new version of {{name}} is available": "A new version of {{name}} is available",
   "Version {{version}}": "Version {{version}}",
@@ -392,5 +391,7 @@
   "Server Connection Lost": "Server Connection Lost",
   "It looks like the server connection has been lost - attempt to reconnect?": "It looks like the server connection has been lost - attempt to reconnect?",
   "Attempt Reconnect": "Attempt Reconnect",
-  "Click \"Resume\" to continue execution.": "Click \"Resume\" to continue execution."
+  "Click \"Resume\" to continue execution.": "Click \"Resume\" to continue execution.",
+  "A web-based CNC interface for Grbl or Marlin controllers": "A web-based CNC interface for Grbl or Marlin controllers",
+  "Delete Macro": "Delete Macro"
 }

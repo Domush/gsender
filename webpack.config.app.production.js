@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const path = require('path');
-const boolean = require('boolean');
+const { boolean } = require('boolean');
 const dotenv = require('dotenv');
 const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const findImports = require('find-imports');
@@ -30,7 +30,7 @@ const publicPath = ((payload) => {
   const algorithm = 'sha1';
   const buf = String(payload);
   const hash = crypto.createHash(algorithm).update(buf).digest('hex');
-  return '/' + hash.substr(0, 8) + '/'; // 8 digits
+  return '/' + hash.substring(0, 8) + '/'; // 8 digits
 })(pkg.version);
 const buildVersion = pkg.version;
 const timestamp = new Date().getTime();
