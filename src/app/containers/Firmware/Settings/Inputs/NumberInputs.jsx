@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
+import ControlledNumberInput from 'app/components/ControlledNumberInput';
 import PropTypes from 'prop-types';
 import i18n from 'app/lib/i18n';
-// import Space from 'app/components/Space';
 import styles from './index.styl';
-
 
 class NumberInputs extends PureComponent {
     static propTypes = {
@@ -40,6 +39,9 @@ class NumberInputs extends PureComponent {
     handleNumberInputs = (event) => {
         let value = event.target.value;
         let name = event.target.name;
+        if (!value) {
+            return;
+        }
         this.props.disableSettingsButton();
         this.setState(prevState => ({
             defaultSettings: {
@@ -59,12 +61,11 @@ class NumberInputs extends PureComponent {
         let placeHolder = this.state.defaultSettings[title];
         return (
             <div className={styles.numberInputs}>
-                <input
+                <ControlledNumberInput
                     name={title}
-                    type="number"
                     className={styles.formControlModal}
                     value={placeHolder || ''}
-                    onChange={this.handleNumberInputs}
+                    externalOnChange={this.handleNumberInputs}
                     min={min}
                     max={max}
                     step={step}

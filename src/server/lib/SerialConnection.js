@@ -4,6 +4,7 @@ import SerialPort from 'serialport';
 const Readline = SerialPort.parsers.Readline;
 
 // Validation
+
 const DATABITS = Object.freeze([5, 6, 7, 8]);
 const STOPBITS = Object.freeze([1, 2]);
 const PARITY = Object.freeze(['none', 'even', 'mark', 'odd', 'space']);
@@ -48,6 +49,7 @@ class SerialConnection extends EventEmitter {
             this.emit('close', err);
         },
         error: (err) => {
+            console.error('Serialport Error');
             this.emit('error', err);
         }
     };
@@ -171,8 +173,7 @@ class SerialConnection extends EventEmitter {
         }
 
         data = this.writeFilter(data, context);
-
-        this.port.write(data);
+        this.port.write(Buffer.from(data));
     }
 }
 

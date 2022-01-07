@@ -20,6 +20,7 @@ const ControlledNumberInput = ({ className, value, type = 'decimal', externalOnC
     };
 
     const onBlur = (e) => {
+        console.log(localValue);
         if (localValue && localValue !== originalValue) {
             setLocalValue(inputRef.current.value);
             onChange(e);

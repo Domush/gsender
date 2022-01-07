@@ -22,7 +22,7 @@ Some things that we’re looking to accomplish with this sender:
 gSender is available for the following systems and does not yet support headless Pi operation
 | ![Windows](https://github.com/EgoistDeveloper/operating-system-logos/blob/master/src/48x48/WIN.png)<br>Windows (x32) | ![Windows](https://github.com/EgoistDeveloper/operating-system-logos/blob/master/src/48x48/WIN.png)<br>Windows (x64) | ![Mac](https://github.com/EgoistDeveloper/operating-system-logos/blob/master/src/48x48/MAC.png)<br>Mac (Intel) | ![Linux](https://github.com/EgoistDeveloper/operating-system-logos/blob/master/src/48x48/LIN.png)<br>Linux | ![RasPi](https://github.com/iiiypuk/rpi-icon/blob/master/48.png)<br>Ras Pi
 |-|-|-|-|-
- ``` Available ```[EXE](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.2/gSender-1.0.2-windows-x86.exe) | ``` Available ``` [EXE](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.2/gSender-1.0.2-windows-x64.exe) | ``` Available ``` [DMG](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.2/gSender-1.0.2.dmg) | ``` Available ``` [DEB](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.2/gSender_1.0.2_amd64.deb) | ``` Available ``` [ApIm](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.2/gSender-1.0.2-armv7l.deb)
+ ``` Available ```[EXE](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.3/gSender-1.0.3-windows-x86.exe) | ``` Available ``` [EXE](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.3/gSender-1.0.3-windows-x64.exe) | ``` Available ``` [DMG](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.3/gSender-1.0.3.dmg) | ``` Available ``` [DEB](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.3/gSender_1.0.3_amd64.deb) | ``` Available ``` [ApIm](https://github.com/Sienci-Labs/gsender/releases/download/v1.0.3/gSender-1.0.3-armv7l.deb)
 
 [Check out the latest releases here.](https://github.com/Sienci-Labs/gsender/releases/)
 
@@ -98,6 +98,25 @@ gSender is also designed in a way that it can be run locally on your computer br
 
 
 ## 🕣 Development History
+
+### 1.0.3 (December 22nd, 2021)
+* ; Comments are now emitted to UI on M0, M1, and M6 workflow stops
+* Fixed issue where jog cancel realtime command wasn't properly sent to controller
+* Fixed issue where default values instead of custom jog speeds weren't used on initial program load
+* Start from line now sends more modals to make sure IoT devices are enabled if that line is skipped
+* Improvements to outline feature - head should now return to original position, better support for disjointed/tiled carves
+* Fixed timestamps from causing UI elements to jump around
+* Fixed DRO being cut off on small resolutions or screen sizes
+* Fixed application not being full-screen on startup
+* Increases on movement limits for jog presets
+* UI fields should be more easily clearable and return to previous value if not changed
+* Workflow controls no longer disappear during jogging
+* Changes to updater to prevent 32 bit application updating to 64 bit
+* Added new laser support preferences with basic offset
+* Alarm 2 should now be unlockable
+* Fixed edge case where surfacing would leave an unfinished pass in the center
+* Updates to serial connection library and workflow
+* New touchplate images and support for upcoming auto-diameter touchplate
 
 ### 1.0.2 (December 3rd, 2021)
 * Fixed regression with XYZ probe

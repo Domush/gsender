@@ -1,6 +1,6 @@
 {
   "name": "gSender",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Electron sender for GRBL based CNC machines",
   "author": {
     "name": "Sienci Labs <hi@sienci.com>",
@@ -24,7 +24,6 @@
   "engines": {
     "node": ">=14"
   },
-  "preferGlobal": true,
   "scripts": {
     "prepare": "npm run clean && npm run eslint && npm run stylint",
     "prebuild-latest": "npm run package-sync && bash -c \"cd src; npm version ${npm_package_version}-${COMMIT_COUNT:-latest}\" && bash scripts/prebuild-prod.sh",
@@ -59,6 +58,7 @@
     "build:linux-arm64": "bash -c 'scripts/electron-builder.sh --linux --arm64'",
     "build:windows-ia32": "bash -c 'scripts/electron-builder.sh --windows --ia32'",
     "build:windows-x64": "bash -c 'scripts/electron-builder.sh --windows --x64'",
+    "build:windows-all": "bash -c 'scripts/electron-builder.sh --windows --ia32 --x64'",
     "start": "cross-env NODE_ENV=production ./bin/gsender -v -p 8000 --controller Marlin",
     "start-electron": "electron ./dist/gsender/main",
     "watch-dev": "cross-env NODE_ENV=development webpack-cli --watch --config webpack.config.server.development.js",
@@ -70,8 +70,7 @@
     "eslint:debug": "echo \"Checking code style...\"; DEBUG=eslint:cli-engine eslint --ext .js --ext .jsx *.js src scripts test",
     "stylint": "stylint src/app",
     "test": "tap test/*.js --no-timeout --node-arg=--require --node-arg=@babel/register --node-arg=--require --node-arg=@babel/polyfill",
-    "coveralls": "tap test/*.js --coverage --coverage-report=text-lcov --nyc-arg=--require --nyc-arg=@babel/register --nyc-arg=--require --nyc-arg=@babel/polyfill | coveralls",
-    "postinstall": "opencollective postinstall"
+    "coveralls": "tap test/*.js --coverage --coverage-report=text-lcov --nyc-arg=--require --nyc-arg=@babel/register --nyc-arg=--require --nyc-arg=@babel/polyfill | coveralls"
   },
   "build": {
     "appId": "org.sienci",
@@ -301,6 +300,7 @@
     "registry-url": "~5.1.0",
     "rimraf": "~2.6.3",
     "semver": "~6.0.0",
+    "serialport": "^9.2.8",
     "serve-favicon": "~2.5.0",
     "serve-static": "~1.13.2",
     "session-file-store": "~1.2.0",
@@ -314,7 +314,7 @@
     "styled-components": "^5.2.1",
     "superagent": "^6.1.0",
     "superagent-use": "~0.1.0",
-    "three": "^0.132.2",
+    "three": "^0.135.0",
     "universal-logger": "~1.0.1",
     "universal-logger-browser": "~1.0.2",
     "use-stay-awake": "^0.1.7",
@@ -394,9 +394,5 @@
     "webpack-manifest-plugin": "~2.0.4",
     "webpack-node-externals": "~1.7.2",
     "write-file-webpack-plugin": "~4.5.0"
-  },
-  "collective": {
-    "type": "opencollective",
-    "url": ""
   }
 }

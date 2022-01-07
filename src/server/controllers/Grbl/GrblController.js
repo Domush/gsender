@@ -185,7 +185,6 @@ class GrblController {
                         }
                     }
                 }
-
                 return data;
             }
         });
@@ -204,7 +203,10 @@ class GrblController {
         this.feeder = new Feeder({
             dataFilter: (line, context) => {
                 // Remove comments that start with a semicolon `;`
-                line = line.replace(/\s*;.*/g, '').trim();
+                let commentMatcher = /\s*;.*/g;
+                let comment = line.match(commentMatcher);
+                const commentString = (comment && comment[0].length > 0) ? comment[0].trim().replace(';', '') : '';
+                line = line.replace(commentMatcher, '').trim();
                 context = this.populateContext(context);
 
                 if (line[0] === '%') {
@@ -216,13 +218,13 @@ class GrblController {
                     if (line === PREHOOK_COMPLETE) {
                         log.debug('Finished Pre-hook');
                         this.feeder.hold({ data: '%toolchange' });
-                        this.emit('toolchange:preHookComplete');
-                        return '(Pre-Hook complete)';
+                        this.emit('toolchange:preHookComplete', commentString);
+                        return 'G4 P0.5 (Pre-Hook complete)';
                     }
                     if (line === POSTHOOK_COMPLETE) {
                         log.debug('Finished Post-hook, resuming program');
                         this.workflow.resume();
-                        return '(Post-Hook complete)';
+                        return 'G4 P0.5 (Post-Hook complete)';
                     }
 
                     // Expression
@@ -241,10 +243,10 @@ class GrblController {
                     const programMode = _.intersection(words, ['M0', 'M1'])[0];
                     if (programMode === 'M0') {
                         log.debug('M0 Program Pause');
-                        this.feeder.hold({ data: 'M0' }); // Hold reason
+                        this.feeder.hold({ data: 'M0', comment: commentString }); // Hold reason
                     } else if (programMode === 'M1') {
                         log.debug('M1 Program Pause');
-                        this.feeder.hold({ data: 'M1' }); // Hold reason
+                        this.feeder.hold({ data: 'M1', comment: commentString }); // Hold reason
                     }
                 }
 
@@ -255,17 +257,11 @@ class GrblController {
                 }
 
                 // // M6 Tool Change
-                // if (_.includes(words, 'M6')) {
-                //     log.debug('M6 Tool Change');
-                //     this.feeder.hold({ data: 'M6' }); // Hold reason
-
-                //     // Surround M6 with parentheses to ignore
-                //     // unsupported command error. If we nuke the whole
-                //     // line, then we'll likely lose other commands that
-                //     // share the line, like a T~.  This makes tool
-                //     // changes complicated.
-                //     line = line.replace('M6', '(M6)');
-                // }
+                if (_.includes(words, 'M6')) {
+                    log.debug('M6 Tool Change');
+                    this.feeder.hold({ data: 'M6', comment: commentString }); // Hold reason
+                    line = line.replace('M6', '(M6)');
+                }
 
                 return line;
             }
@@ -302,10 +298,13 @@ class GrblController {
         // Sender
         this.sender = new Sender(SP_TYPE_CHAR_COUNTING, {
             // Deduct the buffer size to prevent from buffer overrun
-            bufferSize: (128 - 8), // The default buffer size is 128 bytes
+            bufferSize: (128 - 28), // The default buffer size is 128 bytes
             dataFilter: (line, context) => {
                 // Remove comments that start with a semicolon `;`
-                line = line.replace(/\s*;.*/g, '').trim();
+                let commentMatcher = /\s*;.*/g;
+                let comment = line.match(commentMatcher);
+                const commentString = (comment && comment[0].length > 0) ? comment[0].trim().replace(';', '') : '';
+                line = line.replace(commentMatcher, '').trim();
                 context = this.populateContext(context);
 
                 const { sent, received } = this.sender.state;
@@ -336,37 +335,17 @@ class GrblController {
                         log.debug(`M0 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
                         // Workaround for Carbide files - prevent M0 early from pausing program
                         if (sent > 10) {
-                            this.workflow.pause({ data: 'M0' });
+                            this.workflow.pause({ data: 'M0', comment: commentString });
                             this.emit('workflow:pause', { data: 'M0' });
                         }
-                        return line.replace('M0', '(M0)');
+                        line = line.replace('M0', '(M0)');
                     } else if (programMode === 'M1') {
                         log.debug(`M1 Program Pause: line=${sent + 1}, sent=${sent}, received=${received}`);
-                        this.workflow.pause({ data: 'M1' });
+                        this.workflow.pause({ data: 'M1', comment: commentString });
                         this.emit('workflow:pause', { data: 'M1' });
-                        return line.replace('M1', '(M1)');
+                        line = line.replace('M1', '(M1)');
                     }
                 }
-
-                //const machineProfile = store.get('machineProfile');
-                //const preferences = store.get('preferences');
-
-                /*if (line) {
-                    const regex = /([^NGMXYZIJKFPRST%\-?\.?\d+\.?\s])/gi;
-                    if (regex.test(line)) {
-                        if (preferences === undefined) {
-                            this.emit('workflow:state', this.workflow.state, { validLine: false, line });
-                            return line;
-                        }
-                        if (preferences && preferences.showLineWarnings) {
-                            this.workflow.pause({ data: line });
-                            this.emit('workflow:state', this.workflow.state, { validLine: false, line });
-                        } if (!preferences && !preferences.showLineWarnings) {
-                            this.emit('workflow:state', this.workflow.state, { validLine: false, line });
-                        }
-                    }
-                }*/
-
 
                 // More aggressive updating of spindle modals for safety
                 const spindleCommand = _.intersection(words, ['M3', 'M4'])[0];
@@ -382,16 +361,16 @@ class GrblController {
 
                     // Handle specific cases for macro and pause, ignore is default and comments line out with no other action
                     if (toolChangeOption === 'Pause') {
-                        this.workflow.pause({ data: 'M6' });
+                        this.workflow.pause({ data: 'M6', comment: commentString });
                         this.emit('gcode:toolChange', {
                             line: sent + 1,
                             block: line,
                             option: toolChangeOption
-                        });
+                        }, commentString);
                     } else if (toolChangeOption === 'Code') {
-                        this.workflow.pause({ data: 'M6' });
+                        this.workflow.pause({ data: 'M6', comment: commentString });
                         this.emit('toolchange:start');
-                        this.runPreChangeHook(this.populateContext());
+                        this.runPreChangeHook(commentString);
                     }
 
                     line = line.replace('M6', '(M6)');
@@ -405,11 +384,6 @@ class GrblController {
                 log.error(`Serial port "${this.options.port}" is not accessible`);
                 return;
             }
-
-            // if (this.workflow.state === WORKFLOW_STATE_IDLE) {
-            //     log.error(`Unexpected workflow state: ${this.workflow.state}`);
-            //     return;
-            // }
 
             line = String(line).trim();
             if (line.length === 0) {
@@ -554,6 +528,7 @@ class GrblController {
         this.runner.on('error', (res) => {
             const code = Number(res.message) || undefined;
             const error = _.find(GRBL_ERRORS, { code: code });
+            log.error(`Error occurred at ${Date.now()}`);
 
             if (this.workflow.state === WORKFLOW_STATE_RUNNING || this.workflow.state === WORKFLOW_STATE_PAUSED) {
                 const { lines, received } = this.sender.state;
@@ -572,7 +547,6 @@ class GrblController {
                     if (preferences.showLineWarnings) {
                         this.workflow.pause({ err: `error:${code} (${error.message})` });
                         this.emit('workflow:state', this.workflow.state, { validLine: false, line: `${lines.length} ${line}` });
-                        return;
                     }
                 } else {
                     this.emit('serialport:read', res.raw);
@@ -810,7 +784,7 @@ class GrblController {
                     this.command('gcode:stop');
                 }
             }
-        }, 250);
+        }, 300);
 
         // Load file if it exists in CNC engine (AKA it was loaded before connection
     }
@@ -1236,6 +1210,20 @@ class GrblController {
                     const modal = toolpath.getModal();
                     const position = toolpath.getPosition();
 
+                    const coolant = {
+                        mist: '',
+                        flood: '',
+                    };
+
+                    if (modal.coolant) {
+                        if (modal.coolant.includes('M7')) {
+                            coolant.mist = 'M7';
+                        }
+                        if (modal.coolant.includes('M8')) {
+                            coolant.flood = 'M8';
+                        }
+                    }
+
                     const {
                         x: xVal,
                         y: yVal,
@@ -1249,7 +1237,7 @@ class GrblController {
                     modalGCode.push(`G0 G90 G21 X${xVal} Y${yVal}`);
                     modalGCode.push(`G0 G90 G21 Z${zVal}`);
                     // Set modals based on what's parsed so far in the file
-                    modalGCode.push(`${modal.units} ${modal.distance} ${modal.arc} ${modal.feedrate} ${modal.wcs} ${modal.plane}`);
+                    modalGCode.push(`${modal.units} ${modal.distance} ${modal.arc} ${modal.feedrate} ${modal.wcs} ${modal.plane} ${modal.spindle} ${coolant.flood} ${coolant.mist}`);
                     modalGCode.push(`F${feedRate} S${spindleRate}`);
 
                     this.command('gcode', modalGCode);
@@ -1301,21 +1289,22 @@ class GrblController {
                 log.warn(`Warning: The "${cmd}" command is deprecated and will be removed in a future release.`);
                 this.command('gcode:pause');
             },
-            'gcode:pause': () => {
+            'gcode:pause': async () => {
                 this.event.trigger('gcode:pause');
 
                 this.workflow.pause();
+                await delay(100);
                 this.write('!');
             },
             'resume': () => {
                 log.warn(`Warning: The "${cmd}" command is deprecated and will be removed in a future release.`);
                 this.command('gcode:resume');
             },
-            'gcode:resume': () => {
-                this.event.trigger('gcode:resume');
-
+            'gcode:resume': async () => {
                 this.write('~');
+                await delay(1000);
                 this.workflow.resume();
+                this.event.trigger('gcode:resume');
             },
             'feeder:feed': () => {
                 const [commands, context = {}] = args;
@@ -1583,8 +1572,7 @@ class GrblController {
             },
             'jog:stop': () => {
                 this.feeder.reset();
-                this.command('jog:cancel');
-                this.feeder.reset();
+                this.write('\x85');
             },
             'jog:cancel': () => {
                 this.command('gcode', '\x85');
@@ -1672,7 +1660,7 @@ class GrblController {
                 this.runPostChangeHook();
             },
             'gcode:outline': () => {
-                const [gcode = '', concavity = Infinity] = args;
+                const [gcode = '', concavity = 450] = args;
                 const toRun = getOutlineGcode(gcode, concavity);
                 log.debug('Running outline');
                 this.emit('outline:start');
@@ -1689,7 +1677,6 @@ class GrblController {
     }
 
     write(data, context) {
-        console.log(data);
         // Assertion check
         if (this.isClose()) {
             log.error(`Serial port "${this.options.port}" is not accessible`);
@@ -1697,6 +1684,7 @@ class GrblController {
         }
 
         const cmd = data.trim();
+
         this.actionMask.replyStatusReport = (cmd === '?') || this.actionMask.replyStatusReport;
         this.actionMask.replyParserState = (cmd === '$G') || this.actionMask.replyParserState;
 
@@ -1730,16 +1718,18 @@ class GrblController {
     }
 
     /* Runs specified code segment on M6 command before alerting the UI as to what's happened */
-    runPreChangeHook() {
-        const { preHook } = this.toolChangeContext || '';
+    runPreChangeHook(comment = '') {
+        let { preHook } = this.toolChangeContext || '';
+        preHook = `G4 P1\n${preHook}`;
         const block = this.convertGcodeToArray(preHook);
-        block.push(PREHOOK_COMPLETE);
+        block.push(`${PREHOOK_COMPLETE} ;${comment}`);
 
         this.command('gcode', block);
     }
 
     runPostChangeHook() {
-        const { postHook } = this.toolChangeContext || '';
+        let { postHook } = this.toolChangeContext || '';
+        postHook = `G4 P1\n${postHook}`;
         const block = this.convertGcodeToArray(postHook);
         block.push(POSTHOOK_COMPLETE);
 

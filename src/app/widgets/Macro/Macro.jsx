@@ -162,7 +162,9 @@ class Macro extends PureComponent {
 
         const DroppableColumn = ({ droppableId, macros }) => {
             return (
-                <Droppable droppableId={droppableId}>
+                <Droppable
+                    droppableId={droppableId}
+                >
                     {(provided, snapshot) => (
                         <div
                             {...provided.droppableProps}
@@ -170,12 +172,21 @@ class Macro extends PureComponent {
                             style={getListStyle(snapshot.isDraggingOver)}
                         >
                             {macros.map((macro, index) => (
-                                <Draggable key={macro.id} draggableId={macro.id} index={index}>
+                                <Draggable
+                                    key={macro.id}
+                                    draggableId={macro.id}
+                                    index={index}
+                                >
                                     {(provided) => (
                                         <div
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
+                                            style={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}
                                         >
                                             {
                                                 macro.description

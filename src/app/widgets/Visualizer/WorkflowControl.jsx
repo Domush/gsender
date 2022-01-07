@@ -1,22 +1,23 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { PureComponent } from 'react';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import store from 'app/store';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isElectron from 'is-electron';
+
 import reduxStore from 'app/store/redux';
 import controller from 'app/lib/controller';
-import React, { PureComponent } from 'react';
 import api from 'app/api';
 import pubsub from 'pubsub-js';
 import i18n from 'app/lib/i18n';
 import Modal from 'app/components/Modal';
 import Input from 'app/containers/Preferences/components/Input';
+
 import CameraDisplay from './CameraDisplay/CameraDisplay';
 import FunctionButton from '../../components/FunctionButton/FunctionButton';
-//import ReaderWorker from './FileReader.worker';
 import {
     Toaster,
     TOASTER_SUCCESS,
@@ -27,13 +28,14 @@ import {
 } from '../../lib/toaster/ToasterLib';
 import {
     GRBL_ACTIVE_STATE_IDLE,
-    GRBL_ACTIVE_STATE_CHECK, GRBL_ACTIVE_STATE_HOLD,
+    GRBL_ACTIVE_STATE_CHECK,
+    GRBL_ACTIVE_STATE_HOLD,
+    GRBL_ACTIVE_STATE_JOG,
     WORKFLOW_STATE_IDLE,
     WORKFLOW_STATE_PAUSED,
     WORKFLOW_STATE_RUNNING,
     VISUALIZER_PRIMARY,
 } from '../../constants';
-// import { NOTIFICATION_PROGRAM_ERROR } from './constants';
 import styles from './workflow-control.styl';
 import RecentFileButton from './RecentFileButton';
 import { addRecentFile, createRecentFile, createRecentFileFromRawPath } from './ClientRecentFiles';
@@ -153,7 +155,7 @@ class WorkflowControl extends PureComponent {
             return false;
         }
 
-        if (activeState === GRBL_ACTIVE_STATE_HOLD) {
+        if ([GRBL_ACTIVE_STATE_HOLD, GRBL_ACTIVE_STATE_JOG].includes(activeState)) {
             return true;
         }
 
@@ -268,7 +270,7 @@ class WorkflowControl extends PureComponent {
             duration: TOASTER_UNTIL_CLOSE,
             msg: 'Generating outline for current file'
         });
-        controller.command('gcode:outline', gcode, 300);
+        controller.command('gcode:outline', gcode, 500);
     }
 
     startFromLinePrompt = () => {
@@ -290,9 +292,10 @@ class WorkflowControl extends PureComponent {
 
     subscribe() {
         const tokens = [
-            pubsub.subscribe('gcode:toolChange', () => {
+            pubsub.subscribe('gcode:toolChange', (msg, context) => {
+                const { comment } = context;
                 Toaster.pop({
-                    msg: 'Program execution paused due to M6 command',
+                    msg: `Program execution paused due to M6 command with the following comment: ${comment}`,
                     type: TOASTER_WARNING
                 });
             }),

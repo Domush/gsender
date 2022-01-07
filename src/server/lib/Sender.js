@@ -170,6 +170,7 @@ class Sender extends events.EventEmitter {
                         sp.line = this.dataFilter(sp.line, this.state.context) || '';
                     }
 
+
                     // The newline character (\n) consumed the RX buffer space
                     if ((sp.line.length > 0) && ((sp.dataLength + sp.line.length + 1) >= sp.bufferSize)) {
                         break;
@@ -364,9 +365,7 @@ class Sender extends events.EventEmitter {
             this.state.received = lineToStartFrom;
 
             handleStart();
-        }
-
-        if (this.state.total > 0 && this.state.sent === 0) {
+        } else if (this.state.total > 0 && this.state.sent === 0) {
             handleStart();
         }
 

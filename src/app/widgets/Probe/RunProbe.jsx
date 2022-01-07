@@ -111,7 +111,8 @@ class RunProbe extends PureComponent {
     render() {
         const { actions } = this.props;
         const { state } = this.props;
-        const { canClick } = state;
+        const { canClick, touchplate } = state;
+        const { touchplateType } = touchplate;
         const probeCommands = actions.generateProbeCommands();
         const probeCommand = state.availableProbeCommands[state.selectedProbeCommand];
         console.log(probeCommands.join('\n'));
@@ -135,6 +136,7 @@ class RunProbe extends PureComponent {
                                      (indicated by a green light) before returning the probe to the probing position.
                                 </p>
                                 <p>Probing cannot be run without confirming the circuit.</p>
+                                <p>Consider holding your touch plate in place during probing to get a more consistent measurement.</p>
                             </div>
                             <FunctionButton
                                 primary
@@ -157,7 +159,7 @@ class RunProbe extends PureComponent {
                             </FunctionButton>
                         </div>
                         <div className={styles.right}>
-                            <ProbeImage probeCommand={probeCommand} />
+                            <ProbeImage probeCommand={probeCommand} touchplateType={touchplateType} />
                             <ProbeCircuitStatus connected={canClick} probeActive={probeActive} />
                         </div>
                     </div>

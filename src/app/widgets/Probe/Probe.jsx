@@ -25,7 +25,10 @@ class Probe extends PureComponent {
             canClick,
             availableProbeCommands,
             selectedProbeCommand,
+            touchplate
         } = state;
+
+        const { touchplateType } = touchplate;
         const probeCommand = availableProbeCommands[selectedProbeCommand] || false;
 
         return (
@@ -69,7 +72,7 @@ class Probe extends PureComponent {
                         </FunctionButton>
                     </div>
                 </div>
-                <ProbeImage probeCommand={probeCommand} />
+                <ProbeImage touchplateType={touchplateType} probeCommand={probeCommand} />
             </div>
         );
     }

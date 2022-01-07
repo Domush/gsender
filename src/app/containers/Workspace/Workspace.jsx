@@ -166,6 +166,7 @@ class Workspace extends PureComponent {
         'feeder:status': (status) => {
             const { modal } = this.state;
             const { hold, holdReason } = { ...status };
+            console.log(holdReason);
 
             if (!hold) {
                 if (_.includes([MODAL_FEEDER_PAUSED, MODAL_FEEDER_WAIT], modal.name)) {
@@ -174,7 +175,7 @@ class Workspace extends PureComponent {
                 return;
             }
 
-            const { err, data } = { ...holdReason };
+            const { err, data, comment } = { ...holdReason };
 
             if (err) {
                 this.action.openModal(MODAL_FEEDER_PAUSED, {
@@ -204,10 +205,15 @@ class Workspace extends PureComponent {
                 'M190': i18n._('M190 Set Heated Bed Temperature')
             }[data] || data;
 
+            const commentString = comment || '';
+            const content = (comment.length > 0)
+                ? <div><p>Press Resume to continue operation.</p><p>Line contained following comment: <b>{commentString}</b></p></div>
+                : 'Press Resume to continue operation.';
+
             if (hold) {
                 Confirm({
                     title,
-                    content: 'Press "Resume" to continue operation.',
+                    content,
                     confirmLabel: 'Resume',
                     cancelLabel: 'Stop',
                     onConfirm: () => {
@@ -218,10 +224,6 @@ class Workspace extends PureComponent {
                     }
                 });
             }
-            /*
-            this.action.openModal(MODAL_FEEDER_PAUSED, {
-                title: title
-            });*/
         }
     };
 

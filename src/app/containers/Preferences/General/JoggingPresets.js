@@ -13,7 +13,7 @@ export default class JoggingPresets extends Component {
     state = {
         units: store.get('workspace.units'),
         jogSpeeds: this.getJogSpeeds(),
-        currentPreset: { name: 'precise', ...this.getJogSpeeds().precise },
+        selectedPreset: 'precise',
     }
 
     showToast = _.throttle(() => {
@@ -24,73 +24,64 @@ export default class JoggingPresets extends Component {
         });
     }, 5000, { trailing: false });
 
-    pubsubTokens = [];
 
     getJogSpeeds() {
-        const data = store.get('widgets.axes');
-
-        if (!data) {
-            return {};
-        }
-        const { rapid, normal, precise } = data.jog;
+        const jog = store.get('widgets.axes.jog', {});
+        const { rapid, normal, precise } = jog;
 
         return { rapid, normal, precise };
     }
 
     handleJogClick = (selected) => {
-        const { jogSpeeds } = this.state;
-
-        const speed = jogSpeeds[selected];
-
-        this.setState({ currentPreset: { name: selected, ...speed } });
+        this.setState({
+            selectedPreset: selected
+        });
     }
 
     updateState = () => {
+        console.log('WE HERE IN THE UPDATE FUNCTION');
         const units = store.get('workspace.units');
-        const data = store.get('widgets.axes');
-        if (!data) {
-            this.setState({ units });
-            return;
-        }
 
-        this.setState({ units, jogSpeeds: this.getJogSpeeds() });
+        const jogSpeeds = this.getJogSpeeds();
+        console.log('in state update');
+        console.log(jogSpeeds);
+        this.setState({
+            units,
+            jogSpeeds: { ...jogSpeeds }
+        });
     }
 
     handleXYChange = (e) => {
-        const id = e.target.id;
-        const value = Number(e.target.value);
-        const { currentPreset, units } = this.state;
+        let value = Number(e.target.value);
+        const { units, selectedPreset, jogSpeeds } = this.state;
+
+        const currentPreset = jogSpeeds[selectedPreset];
+
+        if (!value) {
+            return;
+        }
 
         if (units === 'mm') {
-            if (value >= 1000.1) {
-                return;
+            if (value > 1000) {
+                value = 1000;
             }
         }
 
         if (units === 'in') {
-            if (value >= 40.1) {
-                return;
+            if (value > 40) {
+                value = 40;
             }
         }
 
         if (value <= 0) {
-            return;
+            value = 1;
         }
 
         const metricValue = units === 'mm' ? value : convertToMetric(value);
         const imperialValue = units === 'in' ? value : convertToImperial(value);
 
-        const newObj = {
-            ...currentPreset,
-            in: {
-                ...currentPreset.in,
-                [id]: imperialValue
-            },
-            mm: {
-                ...currentPreset.mm,
-                [id]: metricValue
-            }
-        };
+        currentPreset.mm.xyStep = metricValue;
+        currentPreset.in.xyStep = imperialValue;
 
         const prev = store.get('widgets.axes');
 
@@ -98,58 +89,44 @@ export default class JoggingPresets extends Component {
             ...prev,
             jog: {
                 ...prev.jog,
-                [newObj.name]: {
-                    mm: newObj.mm,
-                    in: newObj.in
+                [selectedPreset]: {
+                    ...currentPreset
                 }
             }
-
         };
-        this.setState(prev => ({ currentPreset: {
-            ...prev.currentPreset,
-            in: newObj.in,
-            mm: newObj.mm,
-        } }));
-        store.replace('widgets.axes', updated);
 
+        store.replace('widgets.axes', updated);
+        this.updateState();
         this.showToast();
     }
 
     handleZChange = (e) => {
-        const id = e.target.id;
-        const value = Number(e.target.value);
-        const { currentPreset, units } = this.state;
+        let value = Number(e.target.value);
+        const { units, selectedPreset, jogSpeeds } = this.state;
+
+        const currentPreset = jogSpeeds[selectedPreset];
 
         if (units === 'mm') {
-            if (value > 1000) {
-                return;
+            if (value > 100) {
+                value = 100;
             }
         }
 
         if (units === 'in') {
             if (value > 4) {
-                return;
+                value = 4;
             }
         }
 
         if (value <= 0) {
-            return;
+            value = 1;
         }
 
         const metricValue = units === 'mm' ? value : convertToMetric(value);
         const imperialValue = units === 'in' ? value : convertToImperial(value);
 
-        const newObj = {
-            ...currentPreset,
-            in: {
-                ...currentPreset.in,
-                [id]: imperialValue
-            },
-            mm: {
-                ...currentPreset.mm,
-                [id]: metricValue
-            }
-        };
+        currentPreset.mm.zStep = metricValue;
+        currentPreset.in.zStep = imperialValue;
 
         const prev = store.get('widgets.axes');
 
@@ -157,27 +134,21 @@ export default class JoggingPresets extends Component {
             ...prev,
             jog: {
                 ...prev.jog,
-                [newObj.name]: {
-                    mm: newObj.mm,
-                    in: newObj.in
+                [selectedPreset]: {
+                    ...currentPreset
                 }
             }
-
         };
-        this.setState(prev => ({ currentPreset: {
-            ...prev.currentPreset,
-            in: newObj.in,
-            mm: newObj.mm,
-        } }));
-        store.replace('widgets.axes', updated);
 
+        store.replace('widgets.axes', updated);
+        this.updateState();
         this.showToast();
     }
 
     handleSpeedChange = (e) => {
-        const id = e.target.id;
-        const value = Number(e.target.value);
-        const { currentPreset, units } = this.state;
+        let value = Number(e.target.value);
+        const { units, selectedPreset, jogSpeeds } = this.state;
+        const currentPreset = jogSpeeds[selectedPreset];
 
         if (units === 'mm') {
             if (value >= 50000.1) {
@@ -198,17 +169,8 @@ export default class JoggingPresets extends Component {
         const metricValue = units === 'mm' ? value : convertToMetric(value);
         const imperialValue = units === 'in' ? value : convertToImperial(value);
 
-        const newObj = {
-            ...currentPreset,
-            in: {
-                ...currentPreset.in,
-                [id]: imperialValue
-            },
-            mm: {
-                ...currentPreset.mm,
-                [id]: metricValue
-            }
-        };
+        currentPreset.mm.feedrate = metricValue;
+        currentPreset.in.feedrate = imperialValue;
 
         const prev = store.get('widgets.axes');
 
@@ -216,45 +178,32 @@ export default class JoggingPresets extends Component {
             ...prev,
             jog: {
                 ...prev.jog,
-                [newObj.name]: {
-                    mm: newObj.mm,
-                    in: newObj.in
+                [selectedPreset]: {
+                    ...currentPreset
                 }
             }
-
         };
-        this.setState(prev => ({ currentPreset: {
-            ...prev.currentPreset,
-            in: newObj.in,
-            mm: newObj.mm,
-        } }));
-        store.replace('widgets.axes', updated);
 
+        store.replace('widgets.axes', updated);
+        this.updateState();
         this.showToast();
     }
 
-    componentDidMount() {
-        store.on('change', this.updateState);
-    }
-
-    componentWillUnmount() {
-        store.removeListener('change', this.updateState);
-    }
-
     render() {
-        const { units, currentPreset } = this.state;
-        const { name } = currentPreset;
+        const { units, jogSpeeds, selectedPreset } = this.state;
 
-        const xyValue = currentPreset[units]?.xyStep;
-        const zValue = currentPreset[units]?.zStep;
-        const speedValue = currentPreset[units]?.feedrate;
+        const preset = jogSpeeds[selectedPreset];
+
+        const xyValue = preset[units]?.xyStep;
+        const zValue = preset[units]?.zStep;
+        const speedValue = preset[units]?.feedrate;
 
         return (
             <Fieldset legend="Jogging Presets">
                 <div className={classnames(styles.jogSpeedWrapper, styles.flexRow)}>
-                    <button type="button" onClick={() => this.handleJogClick('precise')} className={styles[name === 'precise' ? 'jog-speed-active' : 'jog-speed-inactive']}>Precise</button>
-                    <button type="button" onClick={() => this.handleJogClick('normal')} className={styles[name === 'normal' ? 'jog-speed-active' : 'jog-speed-inactive']}>Normal</button>
-                    <button type="button" onClick={() => this.handleJogClick('rapid')} className={styles[name === 'rapid' ? 'jog-speed-active' : 'jog-speed-inactive']}>Rapid</button>
+                    <button type="button" onClick={() => this.handleJogClick('precise')} className={styles[selectedPreset === 'precise' ? 'jog-speed-active' : 'jog-speed-inactive']}>Precise</button>
+                    <button type="button" onClick={() => this.handleJogClick('normal')} className={styles[selectedPreset === 'normal' ? 'jog-speed-active' : 'jog-speed-inactive']}>Normal</button>
+                    <button type="button" onClick={() => this.handleJogClick('rapid')} className={styles[selectedPreset === 'rapid' ? 'jog-speed-active' : 'jog-speed-inactive']}>Rapid</button>
                 </div>
                 <div className={styles['jog-spead-wrapper']}>
                     <Tooltip content="Set amount of movement for XY Jog Speed Preset Buttons" location="default">
